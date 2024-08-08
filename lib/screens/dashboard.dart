@@ -204,7 +204,6 @@ class _DashBoardState extends State<DashBoard> {
                               child: const Text("View Profile"),
                               onTap: () {
                                PersistentNavBarNavigator.pushNewScreen(context, screen: ProfileScreen());
-
                               },
                             ),
                             PopupMenuItem(
