@@ -51,7 +51,7 @@ class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
     final dataResponse = await _dataSource.getAllManagers(
         managerType: managerType,
         wareHouseId: wareHouseId,
-        searchKey: searchKey);
+        searchKey: searchKey??"");
     if (dataResponse.data1) {
       yield ManagerListSuccess(managerList: dataResponse.data2);
     } else {

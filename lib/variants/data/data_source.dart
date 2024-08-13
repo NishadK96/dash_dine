@@ -31,16 +31,32 @@ class VariantDataSource {
     final mime = lookupMimeType(filePath ?? "")!.split("/");
     final fileData = await MultipartFile.fromFile(filePath ?? "",
         contentType: MediaType(mime.first, mime.last));
-
-    final FormData formData = FormData.fromMap({
+final data = {
       "image": fileData,
       "name": name,
       "description": description,
       "updated_by": updatedBy,
       "stock_type": stockType,
       "product_id": productId,
-      "attribute_id": attributeIDs,
-    });
+    };
+    
+      // "attribute_id":attributeIDs,
+      
+    // final FormData formData = FormData.fromMap({
+    //   "image": fileData,
+    //   "name": name,
+    //   "description": description,
+    //   "updated_by": updatedBy,
+    //   "stock_type": stockType,
+    //   "product_id": productId,
+    //   "attribute_id": attributeIDs,
+      
+    // },ListFormat.multiCompatible);
+
+    final formData = FormData.fromMap(data);
+    for (var item in attributeIDs) {
+        formData.fields.add(MapEntry('attribute_id', item.toString()));
+      }
     final response = await client.post(
       PosUrls.createVariant,
       data: formData,

@@ -40,7 +40,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
               SizedBox(width: double.infinity,
                 child: Text(
                   'Set a new password for the manager. Make it unique and different from the previous password.',
@@ -51,19 +51,19 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                 ),
               ),
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
               CurvedTextField(title: "New Password",controller: passController,isPassword: true,isVisible: isNew,
                   onView: () {
                     isNew = !isNew;
                     setState(() {});
                   }),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
               CurvedTextField(title: "Confirm Password",controller: passConfirmController,isPassword: true,isVisible: isConfirm,
                 onView: () {
                   isConfirm = !isConfirm;
                   setState(() {});
                 },),
-              SizedBox(height: 5,),
+              const SizedBox(height: 5,),
               SizedBox(width: double.infinity,
                 child: Text(
                   ' Both password must match.',
@@ -74,7 +74,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                 ),
               ),
-              SizedBox(height: 35,),
+              const SizedBox(height: 35,),
               CommonButton(title: "Change Password",onTap: () {
                 if(passConfirmController.text.trim()==passController.text.trim()) {
                   UserDataSource().changePassword(

@@ -68,28 +68,7 @@ class _ManagersListState extends State<ManagersList> {
             },
           )
         ],
-        child: isLoading
-            ? const LoadingPage()
-            : managerList.isEmpty
-                ? NoDataPage(
-                    name: "Create new Manager",
-                    isButton: widget.managerType == "wmanager"
-                        ? authentication.authenticatedUser.userType == "admin"
-                        : authentication.authenticatedUser.userType ==
-                                "admin" ||
-                            authentication.authenticatedUser.userType ==
-                                "wmanager",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateManagerPage(
-                              managerType: widget.managerType,
-                            ),
-                          ));
-                    },
-                  )
-                : SingleChildScrollView(
+        child:  SingleChildScrollView(
                     child: Column(
                       children: [
                         const SizedBox(
@@ -166,7 +145,28 @@ class _ManagersListState extends State<ManagersList> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
+                    isLoading
+            ? const LoadingPage()
+            : managerList.isEmpty
+                ? NoDataPage(
+                    name: "Create new Manager",
+                    isButton: widget.managerType == "wmanager"
+                        ? authentication.authenticatedUser.userType == "admin"
+                        : authentication.authenticatedUser.userType ==
+                                "admin" ||
+                            authentication.authenticatedUser.userType ==
+                                "wmanager",
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateManagerPage(
+                              managerType: widget.managerType,
+                            ),
+                          ));
+                    },
+                  )
+                :    Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: isTab(context) ? 30 : 16),
                           child: ListView.separated(
