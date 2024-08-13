@@ -10,8 +10,9 @@ class GetAllVariants extends VariantEvent
 {
   bool? fromWarehouse;
   String? id;
+  int? pageNo;
   final String? element;
-  GetAllVariants({this.element,this.id,this.fromWarehouse});}
+  GetAllVariants({this.element,this.id,this.fromWarehouse,this.pageNo});}
 class GetAllVariantsByInventoryForStockAdjust extends VariantEvent
 {}
 class GetAllVariantsByInventoryForStockAllocate extends VariantEvent

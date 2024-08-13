@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pos_app/products/data/data_source.dart';
 import 'package:pos_app/products/model/model.dart';
+import 'package:pos_app/utils/data_response.dart';
 import 'package:pos_app/variants/model/variant_model.dart';
 
 part 'product_list_event.dart';
@@ -15,7 +16,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
   @override
   Stream<ProductListState> mapEventToState(ProductListEvent event) async* {
     if (event is GetAllProducts) {
-      yield* getAllProducts(underWareHouse: event.underWareHouse,costing:  event.costing,inventoryId: event.inventoryId,isInventory: event.isInventory,element: event.element,fromOrder: event.fromOrder);
+      yield* getAllProducts(pageNo: event.pageNo,underWareHouse: event.underWareHouse,costing:  event.costing,inventoryId: event.inventoryId,isInventory: event.isInventory,element: event.element,fromOrder: event.fromOrder);
     }
     if (event is GetVariantByProduct) {
       yield* listVariantByProduct(productId: event.productId);
@@ -39,11 +40,11 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
     }
   }
 
-  Stream<ProductListState> getAllProducts({bool? underWareHouse,bool? costing,bool? isInventory,int? inventoryId,String? element,bool? fromOrder}) async* {
+  Stream<ProductListState> getAllProducts({bool? underWareHouse,bool? costing,bool? isInventory,int? inventoryId,String? element,bool? fromOrder,int? pageNo}) async* {
     yield ProductListLoading();
-    final dataResponse = await _dataSource.getAllProducts(costing: costing,inventoryId: inventoryId,isInventory: isInventory??false,underWareHouse: underWareHouse??false,element:element??"",fromOrder: fromOrder);
-    if (dataResponse.data1) {
-      yield ProductListSuccess(productList: dataResponse.data2);
+    final dataResponse = await _dataSource.getAllProducts(pageNo: pageNo,costing: costing,inventoryId: inventoryId,isInventory: isInventory??false,underWareHouse: underWareHouse??false,element:element??"",fromOrder: fromOrder);
+    if (dataResponse.isSuccess==true) {
+      yield ProductListSuccess(productList: dataResponse);
     } else {
       yield ProductListFailed();
     }

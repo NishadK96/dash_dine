@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/variants/model/order_lines.dart';
 
@@ -10,6 +11,7 @@ class CartPageProductCard extends StatelessWidget {
   final VoidCallback onAdd;
   final bool? fromHistory;
   final VoidCallback onRemove;
+
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
@@ -55,8 +57,8 @@ class CartPageProductCard extends StatelessWidget {
                     Text(
                       "AED ${orderLinesDetails?.sellingPrice}",
                       style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: 16.sp,
+                        color: ColorTheme.secondary,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -64,7 +66,7 @@ class CartPageProductCard extends StatelessWidget {
                       height: 5,
                     ),
                     SizedBox(
-                      width: w / 2,
+                      width: w / 2.3,
                       child: Text(
                         "",
                         style: GoogleFonts.poppins(
@@ -77,7 +79,52 @@ class CartPageProductCard extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                fromHistory==false? SizedBox():Column(
+                fromHistory==false? Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    InkWell(onTap: onRemove,
+                      child: Container(
+                        height: 30.h,
+                        width: 30.h,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(100)),
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
+                          child: Center(
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: ColorTheme.text,
+                              size: 18,
+                            )
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    InkWell(onTap: onAdd,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 3,horizontal: 5),
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            bottom: 0.5, // Space between underline and text
+                          ),
+                          decoration: BoxDecoration(
+                              border: Border(bottom: BorderSide(
+                                color: Colors.black,
+                                width: 1.0, // Underline thickness
+                              ))
+                          ),
+                          child:  Text("Update Qty",style: GoogleFonts.urbanist(
+                            color: Colors.black,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                          )),
+                        )
+                      ),
+                    ),
+                  ],
+                ):Column(
                   children: [
                     InkWell(onTap: onAdd,
                       child: Container(
@@ -121,13 +168,13 @@ class CartPageProductCard extends StatelessWidget {
           left:isTab(context)?12: 8,
           child: CircleAvatar(
             backgroundColor: const Color(0xFF8391A1),
-            radius: 10,
+            radius: 11.5,
             child: Text(
-              orderLinesDetails?.quantity.toString()??"",
-              style: GoogleFonts.poppins(
+            orderLinesDetails?.quantity>999? "999+": orderLinesDetails?.quantity.toString()??"",
+              style: GoogleFonts.urbanist(
                 color: Colors.white,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
+                fontSize: orderLinesDetails?.quantity>999? 10.sp: 12.sp,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

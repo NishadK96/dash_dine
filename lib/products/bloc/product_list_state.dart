@@ -11,7 +11,7 @@ class ProductListInitial extends ProductListState {}
 class ProductListLoading extends ProductListState {}
 
 class ProductListSuccess extends ProductListState {
-final  List<ProductList> productList;
+final  PaginatedResponse productList;
  const ProductListSuccess({required this.productList});
 }
 

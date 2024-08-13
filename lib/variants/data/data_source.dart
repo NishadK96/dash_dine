@@ -310,14 +310,14 @@ class VariantDataSource {
     }
   }
 
-  Future<DoubleResponse> getAllVariants(
-      {String? element, bool? fromWarehouse, String? id}) async {
+  Future<PaginatedResponse> getAllVariants(
+      {String? element, bool? fromWarehouse, String? id,int? pageNo}) async {
     try {
       print("${PosUrls.varientList}?element=$element");
     String path=  authentication.authenticatedUser.userType ==
           "wmanager"
-          ? "${PosUrls.varientListInWareHouse}${authentication.authenticatedUser.businessData?.businessId}?element=$element"
-          : "${PosUrls.varientList}?element=$element";
+          ? "${PosUrls.varientListInWareHouse}${authentication.authenticatedUser.businessData?.businessId}?element=$element&page=$pageNo"
+          : "${PosUrls.varientList}?element=$element&page=$pageNo";
       final response = await client.get(
         path,
         options: Options(
@@ -334,18 +334,15 @@ class VariantDataSource {
           variantList.add(VariantsListModel.fromJson(element));
         }
 
-        return DoubleResponse(true, variantList);
+        return PaginatedResponse(true,variantList,response.data['data']['next'],response.data['data']['count'].toString());
       } else {
         // If the response status is not 'success', handle the error here
-        return DoubleResponse(false, null);
+        return PaginatedResponse(false,null,null,null);
       }
     } catch (e) {
       // If an exception occurs during the request, handle it here
       print("Error fetching products: $e");
-      return DoubleResponse(
-        false,
-        null,
-      );
+      return PaginatedResponse(false,null,null,null);
     }
   }
 

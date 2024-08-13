@@ -52,7 +52,7 @@ class _OrderPageState extends State<OrderPage> {
       listener: (context, state) {
         if (state is ProductListLoading) {}
         if (state is ProductListSuccess) {
-          productList = state.productList;
+          productList = state.productList.data;
           productId = productList[0].id;
           context
               .read<ProductListBloc>()
@@ -309,7 +309,8 @@ class _OrderPageState extends State<OrderPage> {
               ),
             ),
             productAdded!=null?Container(width: w,height: h,color: Colors.black26,):SizedBox(),
-Positioned(bottom:productAdded==null? 30:75,right: 10,child: Stack(
+Positioned(bottom:productAdded==null? 30:75,right: 10,child:
+Stack(
   children: [
     FloatingActionButton(
       backgroundColor: const Color(0xff1E232C),

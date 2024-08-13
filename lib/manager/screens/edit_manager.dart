@@ -108,7 +108,7 @@ class _EditManagerPageState extends State<EditManagerPage> {
             if (state is ListStoresSuccess) {
               isLoading = false;
               stores.clear();
-              stores = state.productList;
+              stores = state.stores.data;
               setState(() {});
             }
             if (state is ListStoresFailed) {

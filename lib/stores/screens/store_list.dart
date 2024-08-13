@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +20,7 @@ import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/loading_page.dart';
 import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/utils/svg_files/common_svg.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class StoreList extends StatefulWidget {
   const StoreList({super.key, this.warehouseId});
@@ -32,12 +35,16 @@ class _StoreListState extends State<StoreList> {
   void initState() {
     context
         .read<ManageStoreBloc>()
-        .add(GetAllStores(warehouseId: widget.warehouseId));
+        .add(GetAllStores(warehouseId: widget.warehouseId,pageNo: 1));
     super.initState();
   }
 
   List<StoreModel> stores = [];
-
+  final RefreshController refreshController =
+  RefreshController(initialRefresh: false);
+  bool hasNextPage = false;
+  int pageNo = 1;
+  String? count;
   bool isLoading = true;
   final TextEditingController _searchController = TextEditingController();
   @override
@@ -48,14 +55,26 @@ class _StoreListState extends State<StoreList> {
       listener: (context, state) {
         if (state is ListStoresLoading) {}
         if (state is ListStoresSuccess) {
+
           isLoading = false;
-          stores.clear();
-          stores = state.productList;
+          count= state.stores.count;
+          isLoading = false;
+          setState(() {});
+          if (state.stores.nextPageUrl == null) {
+            hasNextPage = false;
+            setState(() {});
+          } else {
+            hasNextPage = true;
+            setState(() {});
+          }
+          for (int i = 0; i < state.stores.data.length; i++) {
+            stores.add(state.stores.data[i]);
+          }
+
           setState(() {});
         }
         if (state is ListStoresFailed) {
           isLoading = false;
-          stores = [];
           setState(() {});
         }
       },
@@ -74,125 +93,193 @@ class _StoreListState extends State<StoreList> {
                     isButton: authentication.authenticatedUser.userType ==
                             "admin" ||
                         authentication.authenticatedUser.userType == "wmanager")
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        stores.isEmpty && _searchController == ""
-                            ? SizedBox()
-                            : Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: isTab(context) ? 30 : 16),
-                                height: 43,
-                                decoration: const BoxDecoration(
-                                    color: Color(0xFFF7F7F7)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Total Stores: ${stores.length}',
-                                      style: GoogleFonts.poppins(
-                                        color: ColorTheme.text,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    authentication.authenticatedUser.userType !=
-                                            "manager"
-                                        ? InkWell(
-                                            onTap: () {
-                                              FocusScope.of(context)
-                                                  .requestFocus(
-                                                      new FocusNode());
-                                              PersistentNavBarNavigator
-                                                  .pushNewScreen(context,
-                                                      withNavBar: false,
-                                                      screen:
-                                                          const CreateNewStore());
-                                            },
-                                            child: Row(
-                                              children: [
-                                                SvgPicture.string(
-                                                    CommonSvgFiles()
-                                                        .addIconSvg),
-                                                Text(
-                                                  'Add New',
-                                                  style: GoogleFonts.poppins(
-                                                    color: Colors.black,
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        : SizedBox()
-                                  ],
-                                ),
-                              ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        authentication.authenticatedUser.userType ==
-                                    "wmanager" ||
-                                stores.isEmpty && _searchController == ""
-                            ? SizedBox()
-                            : Container(
-                                padding: EdgeInsets.only(
-                                    left: isTab(context) ? 30 : 16,
-                                    right: isTab(context) ? 30 : 16,
-                                    bottom: 0),
-                                child: CurvedTextField(
-                                  controller: _searchController,
-                                  onChanged: (p0) {
-                                    context.read<ManageStoreBloc>().add(
-                                        GetAllStores(
-                                            searchKey: _searchController.text));
-                                  },
-                                  title: "Search stores",
-                                  isSearch: true,
-                                )),
-                        authentication.authenticatedUser.userType == "wmanager"
-                            ? SizedBox()
-                            : const SizedBox(
-                                height: 20,
-                              ),
-                        stores.isEmpty
-                            ? NoSearchData()
-                            : Container(
-                                padding: EdgeInsets.only(
-                                    bottom: 30,
-                                    left: isTab(context) ? 30 : 16,
-                                    right: isTab(context) ? 30 : 16),
-                                child: ListView.separated(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    primary: false,
-                                    itemBuilder: (context, index) {
-                                      return StoreTileCard(
-                                        storeData: stores[index],
-                                        onTap: () {
-                                          // PersistentNavBarNavigator.pushNewScreen(context,
-                                          //     withNavBar: false,
-                                          //     screen: const WareHouseDetailPage());
-                                        },
-                                        imagePro:
-                                            "https://png.pngtree.com/thumb_back/fh260/background/20230516/pngtree-person-with-sunglasses-and-beard-image_2563737.jpg",
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                    itemCount: stores.length),
-                              )
-                      ],
+                : SmartRefresher( controller: refreshController,
+          enablePullUp: hasNextPage == false ? false : true,
+          footer: CustomFooter(
+            builder: (context, mode) {
+              Widget body;
+              if (mode == LoadStatus.idle) {
+                body = Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 20.w,height: 20.h,child: CircularProgressIndicator(color: ColorTheme.primary,strokeWidth: 2,)),
+                    const SizedBox(
+                      width: 10,
                     ),
-                  ),
+                    Text(
+                      "Loading..",
+                      style: GoogleFonts.urbanist(
+                        color: ColorTheme.secondary,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
+                );
+              } else if (mode == LoadStatus.loading) {
+                body = Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 20.w,height: 20.h,child: CircularProgressIndicator(color: ColorTheme.primary,strokeWidth: 2,)),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Loading..",
+                      style: GoogleFonts.urbanist(
+                        color: ColorTheme.secondary,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
+                );
+              } else {
+                body = Text("No more Data",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ));
+              }
+              return SizedBox(
+                height: 55.0,
+                child: Center(child: body),
+              );
+            },
+          ),
+          onLoading: () {
+            if (hasNextPage == true) {
+              context
+                  .read<ManageStoreBloc>()
+                  .add(GetAllStores(warehouseId: widget.warehouseId,pageNo: ++pageNo));
+            } else {
+              log(1.1);
+            }
+          },
+          enablePullDown: false,
+                  child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          stores.isEmpty && _searchController == ""
+                              ? SizedBox()
+                              : Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: isTab(context) ? 30 : 16),
+                                  height: 43,
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xFFF7F7F7)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Total Stores: ${stores.length}',
+                                        style: GoogleFonts.poppins(
+                                          color: ColorTheme.text,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      authentication.authenticatedUser.userType !=
+                                              "manager"
+                                          ? InkWell(
+                                              onTap: () {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        new FocusNode());
+                                                PersistentNavBarNavigator
+                                                    .pushNewScreen(context,
+                                                        withNavBar: false,
+                                                        screen:
+                                                            const CreateNewStore());
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  SvgPicture.string(
+                                                      CommonSvgFiles()
+                                                          .addIconSvg),
+                                                  Text(
+                                                    'Add New',
+                                                    style: GoogleFonts.poppins(
+                                                      color: Colors.black,
+                                                      fontSize: 16.sp,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox()
+                                    ],
+                                  ),
+                                ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          authentication.authenticatedUser.userType ==
+                                      "wmanager" ||
+                                  stores.isEmpty && _searchController == ""
+                              ? SizedBox()
+                              : Container(
+                                  padding: EdgeInsets.only(
+                                      left: isTab(context) ? 30 : 16,
+                                      right: isTab(context) ? 30 : 16,
+                                      bottom: 0),
+                                  child: CurvedTextField(
+                                    controller: _searchController,
+                                    onChanged: (p0) {
+                                      context.read<ManageStoreBloc>().add(
+                                          GetAllStores(
+                                              searchKey: _searchController.text));
+                                    },
+                                    title: "Search stores",
+                                    isSearch: true,
+                                  )),
+                          authentication.authenticatedUser.userType == "wmanager"
+                              ? SizedBox()
+                              : const SizedBox(
+                                  height: 20,
+                                ),
+                          stores.isEmpty
+                              ? NoSearchData()
+                              : Container(
+                                  padding: EdgeInsets.only(
+                                      bottom: 30,
+                                      left: isTab(context) ? 30 : 16,
+                                      right: isTab(context) ? 30 : 16),
+                                  child: ListView.separated(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      primary: false,
+                                      itemBuilder: (context, index) {
+                                        return StoreTileCard(
+                                          storeData: stores[index],
+                                          onTap: () {
+                                            // PersistentNavBarNavigator.pushNewScreen(context,
+                                            //     withNavBar: false,
+                                            //     screen: const WareHouseDetailPage());
+                                          },
+                                          imagePro:
+                                              "https://png.pngtree.com/thumb_back/fh260/background/20230516/pngtree-person-with-sunglasses-and-beard-image_2563737.jpg",
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                      itemCount: stores.length),
+                                )
+                        ],
+                      ),
+                    ),
+                ),
       ),
     );
   }
