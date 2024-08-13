@@ -64,26 +64,28 @@ class VariantsTileCardStockAdjustment extends StatelessWidget {
                           width: w1 /1.45,
                           child: Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    variantCard?.name ?? "",
-                                    style: GoogleFonts.urbanist(
-                                      color: const Color(0xFF1C1B1F),
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
+                              SizedBox(width: w1/1.7,
+                                child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      variantCard?.name ?? "",
+                                      style: GoogleFonts.urbanist(
+                                        color: const Color(0xFF1C1B1F),
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w600,
+                                        height: 0,
+                                      ),
                                     ),
-                                  ),
-                                   Text(
-                                     variantCard?.description ?? "",
-                                     style: GoogleFonts.urbanist(
-                                       color: const Color(0xFF8390A1),
-                                       fontSize: 14.sp,
-                                       fontWeight: FontWeight.w500,
+                                     Text(
+                                       variantCard?.description ?? "",
+                                       style: GoogleFonts.urbanist(
+                                         color: const Color(0xFF8390A1),
+                                         fontSize: 14.sp,
+                                         fontWeight: FontWeight.w500,
+                                       ),
                                      ),
-                                   ),
-                                ],
+                                  ],
+                                ),
                               ),Spacer(),
                  InkWell(
                                   onTap: onAssignStock,
