@@ -14,7 +14,8 @@ class GetAllProducts extends ProductListEvent
   final bool? underWareHouse;
   final bool? fromOrder;
   final int? inventoryId;
-  const GetAllProducts({this.element,this.costing=false,this.underWareHouse,this.isInventory, this.inventoryId,this.fromOrder});}
+  final int? pageNo;
+  const GetAllProducts({this.pageNo,this.element,this.costing=false,this.underWareHouse,this.isInventory, this.inventoryId,this.fromOrder});}
 
 class GetVariantByProduct extends ProductListEvent
 {

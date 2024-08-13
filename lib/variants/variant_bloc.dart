@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pos_app/stores/models/store_model.dart';
+import 'package:pos_app/utils/data_response.dart';
 import 'package:pos_app/variants/data/data_source.dart';
 import 'package:pos_app/variants/model/assign_model.dart';
 import 'package:pos_app/variants/model/attribute_model.dart';
@@ -18,7 +19,7 @@ class VariantBloc extends Bloc<VariantEvent, VariantState> {
   @override
   Stream<VariantState> mapEventToState(VariantEvent event) async* {
     if (event is GetAllVariants) {
-      yield* getAllProducts(element:event.element,fromWarehouse: event.fromWarehouse,id: event.id);
+      yield* getAllProducts(element:event.element,fromWarehouse: event.fromWarehouse,id: event.id,pageNo: event.pageNo);
     } 
     else if (event is GetAllAttributeList) {
       yield* getAllAttribute();
@@ -47,11 +48,11 @@ class VariantBloc extends Bloc<VariantEvent, VariantState> {
     }
   }
 
-  Stream<VariantState> getAllProducts({String? element,bool? fromWarehouse,String? id}) async* {
+  Stream<VariantState> getAllProducts({String? element,bool? fromWarehouse,String? id,int? pageNo}) async* {
     yield VariantsListLoading();
-    final dataResponse = await _dataSource.getAllVariants(element:element??"",fromWarehouse: fromWarehouse,id: id);
-    if (dataResponse.data1) {
-      yield VariantsListSuccess(variantsList: dataResponse.data2);
+    final dataResponse = await _dataSource.getAllVariants(element:element??"",fromWarehouse: fromWarehouse,id: id,pageNo: pageNo);
+    if (dataResponse.isSuccess==true) {
+      yield VariantsListSuccess(variantsList: dataResponse);
     } else {
       yield VariantsListFailed();
     }

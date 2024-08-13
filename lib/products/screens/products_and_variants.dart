@@ -46,7 +46,7 @@ class _ProductsAndVariantsState extends State<ProductsAndVariants> {
               if (state is ProductListLoading) {}
               if (state is ProductListSuccess) {
                 isLoading = false;
-                productList = state.productList;
+                productList = state.productList.data;
                 setState(() {});
               }
               if (state is ProductListFailed) {

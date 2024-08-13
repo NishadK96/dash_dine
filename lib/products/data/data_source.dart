@@ -209,14 +209,14 @@ Future<DoubleResponse> deleteAttribute({
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
-  Future<DoubleResponse> getAllProducts(
-      {bool? costing, bool? isInventory, int? inventoryId,String element="",bool? fromOrder,bool? underWareHouse}) async {
+  Future<PaginatedResponse> getAllProducts(
+      {bool? costing, bool? isInventory, int? inventoryId,String element="",bool? fromOrder,bool? underWareHouse,int? pageNo}) async {
     try {
       String path =underWareHouse==true? "${PosUrls.listProductForWareHouse}$inventoryId":fromOrder==true? "${PosUrls.listProductForInventory}$inventoryId":costing == true
           ? PosUrls.listProductsForCosting
           : isInventory == true
               ? PosUrls.productListByInventory + inventoryId.toString()
-              : "${PosUrls.productList}?element=$element";
+              : "${PosUrls.productList}?element=$element&page=$pageNo";
      print("searchingggg $path");
       final response = await client.get(
         path,
@@ -235,18 +235,15 @@ Future<DoubleResponse> deleteAttribute({
           productList.add(ProductList.fromJson(element));
         }
 
-        return DoubleResponse(true, productList);
+        return PaginatedResponse(true,productList,response.data['data']['next'],response.data['data']['count'].toString());
       } else {
         // If the response status is not 'success', handle the error here
-        return DoubleResponse(false, null);
+        return PaginatedResponse(false,null,null,null);
       }
     } catch (e) {
       print("eeeeee $e");
       // If an exception occurs during the request, handle it here
-      return DoubleResponse(
-        false,
-        null,
-      );
+      return PaginatedResponse(false,null,null,null);
     }
   }
 

@@ -16,8 +16,8 @@ class ListStoresInitial extends ManageStoreState {}
 class ListStoresLoading extends ManageStoreState {}
 
 class ListStoresSuccess extends ManageStoreState {
-final  List<StoreModel> productList ;
- const ListStoresSuccess({required this.productList});
+final   PaginatedResponse stores ;
+ const ListStoresSuccess({required this.stores});
 }
 
 class ListStoresFailed extends ManageStoreState {}

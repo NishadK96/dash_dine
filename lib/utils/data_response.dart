@@ -33,12 +33,13 @@ class DoubleResponse<T, R> {
 
 class PaginatedResponse<T> {
   PaginatedResponse(
+    this.isSuccess,
     this.data,
     this.nextPageUrl,
     this.count, {
     this.previousUrl,
   });
-
+  final bool? isSuccess;
   final T? data;
   final String? count;
   final String? nextPageUrl;
@@ -55,12 +56,14 @@ class PaginatedResponse<T> {
       : null;
 
   PaginatedResponse<T> copyWith({
+    bool? isSuccess,
     T? data,
     String? count,
     String? nextPageUrl,
     String? previousPageUrl,
   }) {
     return PaginatedResponse<T>(
+      isSuccess ?? this.isSuccess,
       data ?? this.data,
       count ?? this.count,
       nextPageUrl ?? this.nextPageUrl,
