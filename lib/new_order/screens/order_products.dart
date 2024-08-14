@@ -214,9 +214,9 @@ class _OrderProductsState extends State<OrderProducts> {
                 ),
                 onLoading: () {
                   if (hasNextPage == true) {
-                    context
-                        .read<ProductListBloc>()
-                        .add(GetAllProducts(pageNo: ++pageNo));
+                    // context
+                    //     .read<ProductListBloc>()
+                    //     .add(GetAllProducts(pageNo: ++pageNo));
                   } else {
                     log(1.1);
                   }

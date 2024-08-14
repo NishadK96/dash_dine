@@ -24,7 +24,7 @@ import 'package:pos_app/utils/svg_files/common_svg.dart';
 import 'package:pos_app/warehouse/bloc/manage_warehouse/manage_warehouse_bloc.dart';
 import 'package:pos_app/warehouse/models/warehouse_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+List<StoreModel> stores = [];
 class StoreList extends StatefulWidget {
   const StoreList({super.key, this.warehouseId});
   final String? warehouseId;
@@ -36,6 +36,7 @@ class StoreList extends StatefulWidget {
 class _StoreListState extends State<StoreList> {
   @override
   void initState() {
+    stores.clear();
     context
         .read<ManageStoreBloc>()
         .add(GetAllStores(warehouseId: widget.warehouseId, pageNo: 1));
@@ -46,7 +47,7 @@ class _StoreListState extends State<StoreList> {
   List<WareHouseModel> warehouses = [];
   String? selectedValue;
 
-  List<StoreModel> stores = [];
+
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
   bool hasNextPage = false;
@@ -208,9 +209,13 @@ class _StoreListState extends State<StoreList> {
                       },
                     ),
                     onLoading: () {
+                      pageNo++;
                       if (hasNextPage == true) {
                         context.read<ManageStoreBloc>().add(GetAllStores(
-                            warehouseId: widget.warehouseId, pageNo: ++pageNo));
+                            warehouseId: widget.warehouseId, pageNo: pageNo));
+                        if (mounted) {
+                          refreshController.loadComplete();
+                        }
                       } else {
                         log(1.1);
                       }

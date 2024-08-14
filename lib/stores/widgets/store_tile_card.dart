@@ -11,6 +11,7 @@ import 'package:pos_app/stores/data/store_data_soure.dart';
 import 'package:pos_app/stores/manage_store_bloc/manage_store_bloc.dart';
 import 'package:pos_app/stores/models/store_model.dart';
 import 'package:pos_app/stores/screens/edit_store.dart';
+import 'package:pos_app/stores/screens/store_list.dart';
 import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/utils/svg_files/common_svg.dart';
@@ -141,8 +142,8 @@ class _StoreTileCardState extends State<StoreTileCard> {
               ],
             ),
             authentication
-                .authenticatedUser.userType ==
-                "wmanager"?   InkWell(onTap:  () {
+                .authenticatedUser.userType !=
+                "manager"?   InkWell(onTap:  () {
         showModalBottomSheet(
           context: context,
           builder: (context) {
@@ -190,6 +191,7 @@ class _StoreTileCardState extends State<StoreTileCard> {
                                       StoreDataSource().deleteStore(storeId: widget.storeData.id.toString()).then((value) {
                                         if (value.data1 ==
                                             true) {
+                                          stores.clear();
                                           context.read<ManageStoreBloc>().add(GetAllStores());
                                           Fluttertoast.showToast(msg: value.data2);
                                           Navigator.pop(context);

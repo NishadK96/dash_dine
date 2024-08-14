@@ -51,6 +51,7 @@ class PosUrls{
   static  String listOrderHistory="$baseUrl/order/list-orders/${authentication.authenticatedUser.businessData?.businessId}";
   static const String orderDetails="$baseUrl/order/read-order/";
   static const String listProductForInventory="$baseUrl/product/list-product-by-inventory/";
+  static const String listProductForInventoryForOrder="$baseUrl/order/list-product-by-inventory-for-order/";
   static const String stockApprovalByAdmin="$baseUrl/stock/adjustment-approval-by-admin";
   static const String listProductForWareHouse="$baseUrl/product/list-product-by-warehouse/";
   static const String allocateStockToStoreUrl="$baseUrl/stock/allocate-stock-to-store";

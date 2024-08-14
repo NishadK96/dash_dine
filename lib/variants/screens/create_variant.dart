@@ -149,7 +149,7 @@ class _CreateNewVariantState extends State<CreateNewVariant> {
               if (state is CreateVariantSuccess) {
                 isCreating = false;
                 Fluttertoast.showToast(msg: state.message);
-                context.read<VariantBloc>().add(GetAllVariants());
+                // context.read<VariantBloc>().add(GetAllVariants());
                 Navigator.pop(context);
                 setState(() {});
                 SuccessPopup().successAlert(context, "Variant has been created successfully!");

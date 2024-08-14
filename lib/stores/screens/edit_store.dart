@@ -11,6 +11,7 @@ import 'package:pos_app/common_widgets/text_field.dart';
 import 'package:pos_app/stores/data/store_data_soure.dart';
 import 'package:pos_app/stores/manage_store_bloc/manage_store_bloc.dart';
 import 'package:pos_app/stores/models/store_model.dart';
+import 'package:pos_app/stores/screens/store_list.dart';
 import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/utils/svg_files/common_svg.dart';
@@ -223,6 +224,7 @@ class _EditStoreState extends State<EditStore> {
                           .then((value) {
                           
                         if (value.data1 == true) {
+                          stores.clear();
                           isLoading=false;
                           Fluttertoast.showToast(msg: value.data2);
                            context.read<ManageStoreBloc>().add(GetAllStores());
