@@ -21,6 +21,9 @@ class ManageStoreBloc extends Bloc<ManageStoreEvent, ManageStoreState> {
     if (event is GetAllStores) {
       yield* getAllStores(searchKey: event.searchKey??"",warehouseId: event.warehouseId,pageNo: event.pageNo);
     }
+    else  if (event is SearchStore) {
+      yield* searchAllStores(searchKey: event.searchKey??"",warehouseId: event.warehouseId,pageNo: event.pageNo);
+    }
     if (event is GetListReceivingStockInventory) {
       yield* getlistReceivingStockInventory();
     }
@@ -48,6 +51,18 @@ class ManageStoreBloc extends Bloc<ManageStoreEvent, ManageStoreState> {
       yield ListStoresSuccess(stores: dataResponse);
     } else {
       yield ListStoresFailed();
+    }
+  }
+
+  Stream<ManageStoreState> searchAllStores(
+      {String? searchKey, String? warehouseId, int? pageNo}) async* {
+        print("searrchhhhhhh");
+    yield SearchStoresLoading();
+    final dataResponse = await _dataSource.getAllStores(searchKey: searchKey,warehouseId: warehouseId,pageNo: pageNo);
+    if (dataResponse.isSuccess==true) {
+      yield SearchStoresSuccess(stores: dataResponse);
+    } else {
+      yield SearchStoresFailed();
     }
   }
 

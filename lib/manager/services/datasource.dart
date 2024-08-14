@@ -125,10 +125,12 @@ class ManagerDataSource {
       String? wareHouseId,
       String? searchKey}) async {
     try {
+      print(
+          "urlllss ${wareHouseId == null || wareHouseId == "" ? "${PosUrls.listManagers}$managerType&search_key=$searchKey" : "${PosUrls.listManagers}$managerType&warehouse_id=$wareHouseId&search_key=$searchKey"}");
       final response = await client.get(
         wareHouseId == null || wareHouseId == ""
-            ? "${PosUrls.listManagers}$managerType"
-            : "${PosUrls.listManagers}$managerType&warehouse_id=$wareHouseId?search_name=$searchKey",
+            ? "http://api-posorder.dhoomaworksbench.site/api/user?user_type=$managerType&search_key=$searchKey"
+            : "${PosUrls.listManagers}$managerType&warehouse_id=$wareHouseId&search_key=$searchKey",
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -136,6 +138,7 @@ class ManagerDataSource {
           },
         ),
       );
+      print("res[pomseee $response]");
       if (response.statusCode == 200) {
         List<ManagerList> managerList = [];
         for (var element in response.data['results']) {
