@@ -166,7 +166,7 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                       ),
                       Row(
                         children: [
-                          Text(orderDetails?.customerId?.name?.toTitleCase()??"",
+                          Text(orderDetails?.customerId?.name==""||orderDetails?.customerId?.name==null?"[Name]":orderDetails?.customerId?.name?.toTitleCase()??"[Name]",
                               style: GoogleFonts.urbanist(
                                 color: ColorTheme.text,
                                 fontSize:15.sp,
@@ -186,7 +186,7 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                       ),
                       Row(
                         children: [
-                          Text(orderDetails?.customerId?.phoneNumber??"",
+                          Text(orderDetails?.customerId?.phoneNumber==""||orderDetails?.customerId?.phoneNumber==null?"[Phone]":orderDetails?.customerId?.phoneNumber??"[Phone]",
                               style: GoogleFonts.urbanist(
                                 color: ColorTheme.secondary,
                                 fontSize: 15.sp,

@@ -66,7 +66,7 @@ class _EditManagerPageState extends State<EditManagerPage> {
         TextEditingController(text: widget.managerDetails?.contactNumber);
     emailController = TextEditingController(text: widget.managerDetails?.email);
     // if (widget.managerType == "wmanager") {
-    //   context.read<ManageWarehouseBloc>().add(GetAllWarehouses());
+      // context.read<ManageWarehouseBloc>().add(GetAllWarehouses());
     // } else {
     //   context.read<ManageStoreBloc>().add(GetAllStores());
     // }
@@ -108,7 +108,7 @@ class _EditManagerPageState extends State<EditManagerPage> {
             if (state is ListStoresSuccess) {
               isLoading = false;
               stores.clear();
-              stores = state.productList;
+              stores = state.stores.data;
               setState(() {});
             }
             if (state is ListStoresFailed) {

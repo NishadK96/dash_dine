@@ -13,7 +13,7 @@ class VariantsListInitial extends VariantState {}
 class VariantsListLoading extends VariantState {}
 
 class VariantsListSuccess extends VariantState {
-  List<VariantsListModel> variantsList = [];
+  PaginatedResponse variantsList;
   VariantsListSuccess({required this.variantsList});
 }
 

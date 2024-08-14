@@ -80,7 +80,7 @@ class _ProductsListCostingScreenState extends State<ProductsListCostingScreen> {
               if (state is ProductListLoading) {}
               if (state is ProductListSuccess) {
                 isLoading = false;
-                productList = state.productList;
+                productList = state.productList.data;
                 setState(() {});
               }
               if (state is ProductListFailed) {

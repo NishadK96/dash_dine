@@ -6,7 +6,9 @@ import 'package:pos_app/screens/dashboard.dart';
 class OrderAppBar extends StatelessWidget {
   final String? title;
   final bool? toDashboard;
-  const OrderAppBar({super.key, this.title,this.toDashboard=false});
+  final bool?  isBack;
+  final VoidCallback? isBackAction;
+  const OrderAppBar({super.key, this.title,this.toDashboard=false,this.isBack=false,this.isBackAction});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class OrderAppBar extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         leading: InkWell(
-          onTap: (){
+          onTap:isBack==true? isBackAction:(){
             if(toDashboard==true)
               {
                 Navigator.pushAndRemoveUntil(

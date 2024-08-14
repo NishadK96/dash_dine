@@ -16,8 +16,7 @@ import 'package:pos_app/variants/screens/edit_variant.dart';
 
 class VariantDataSource {
   Dio client = Dio();
-
-  Future<DoubleResponse> createVariant(
+Future<DoubleResponse> createVariant(
       {required String name,
       required String description,
       required String updatedBy,
@@ -26,37 +25,23 @@ class VariantDataSource {
       required List<int> attributeIDs,
       required int productId}) async {
     String? filePath = "";
-    print("check new at services $attributeIDs, $stockType");
+    String newAttributeId=attributeIDs.join(",");
+    print("check new at services $newAttributeId, $stockType");
+
     filePath = image?.path;
     final mime = lookupMimeType(filePath ?? "")!.split("/");
     final fileData = await MultipartFile.fromFile(filePath ?? "",
         contentType: MediaType(mime.first, mime.last));
-final data = {
+
+    final FormData formData = FormData.fromMap({
       "image": fileData,
       "name": name,
       "description": description,
       "updated_by": updatedBy,
       "stock_type": stockType,
       "product_id": productId,
-    };
-    
-      // "attribute_id":attributeIDs,
-      
-    // final FormData formData = FormData.fromMap({
-    //   "image": fileData,
-    //   "name": name,
-    //   "description": description,
-    //   "updated_by": updatedBy,
-    //   "stock_type": stockType,
-    //   "product_id": productId,
-    //   "attribute_id": attributeIDs,
-      
-    // },ListFormat.multiCompatible);
-
-    final formData = FormData.fromMap(data);
-    for (var item in attributeIDs) {
-        formData.fields.add(MapEntry('attribute_id', item.toString()));
-      }
+      "attribute_id": newAttributeId,
+    });
     final response = await client.post(
       PosUrls.createVariant,
       data: formData,
@@ -71,6 +56,7 @@ final data = {
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
+
 
   Future<DoubleResponse> editVariant(
       {required String name,
@@ -326,14 +312,14 @@ final data = {
     }
   }
 
-  Future<DoubleResponse> getAllVariants(
-      {String? element, bool? fromWarehouse, String? id}) async {
+  Future<PaginatedResponse> getAllVariants(
+      {String? element, bool? fromWarehouse, String? id,int? pageNo}) async {
     try {
       print("${PosUrls.varientList}?element=$element");
     String path=  authentication.authenticatedUser.userType ==
           "wmanager"
-          ? "${PosUrls.varientListInWareHouse}${authentication.authenticatedUser.businessData?.businessId}?element=$element"
-          : "${PosUrls.varientList}?element=$element";
+          ? "${PosUrls.varientListInWareHouse}${authentication.authenticatedUser.businessData?.businessId}?element=$element&page=$pageNo"
+          : "${PosUrls.varientList}?element=$element&page=$pageNo";
       final response = await client.get(
         path,
         options: Options(
@@ -350,18 +336,15 @@ final data = {
           variantList.add(VariantsListModel.fromJson(element));
         }
 
-        return DoubleResponse(true, variantList);
+        return PaginatedResponse(true,variantList,response.data['data']['next'],response.data['data']['count'].toString());
       } else {
         // If the response status is not 'success', handle the error here
-        return DoubleResponse(false, null);
+        return PaginatedResponse(false,null,null,null);
       }
     } catch (e) {
       // If an exception occurs during the request, handle it here
       print("Error fetching products: $e");
-      return DoubleResponse(
-        false,
-        null,
-      );
+      return PaginatedResponse(false,null,null,null);
     }
   }
 

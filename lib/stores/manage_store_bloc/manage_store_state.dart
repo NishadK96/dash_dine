@@ -16,11 +16,22 @@ class ListStoresInitial extends ManageStoreState {}
 class ListStoresLoading extends ManageStoreState {}
 
 class ListStoresSuccess extends ManageStoreState {
-final  List<StoreModel> productList ;
- const ListStoresSuccess({required this.productList});
+final   PaginatedResponse stores ;
+ const ListStoresSuccess({required this.stores});
 }
 
 class ListStoresFailed extends ManageStoreState {}
+
+class SearchStoresInitial extends ManageStoreState {}
+
+class SearchStoresLoading extends ManageStoreState {}
+
+class SearchStoresSuccess extends ManageStoreState {
+final   PaginatedResponse stores ;
+ const SearchStoresSuccess({required this.stores});
+}
+
+class SearchStoresFailed extends ManageStoreState {}
 class ListStoresUnderWareHouseLoading extends ManageStoreState {}
 
 class ListStoresUnderWareHouseSuccess extends ManageStoreState {

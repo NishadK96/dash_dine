@@ -10,6 +10,7 @@ import 'package:pos_app/auth/login_page.dart';
 import 'package:pos_app/auth/profile_page.dart';
 import 'package:pos_app/common_widgets/linear_grad_container.dart';
 import 'package:pos_app/manager/screens/managers_list.dart';
+import 'package:pos_app/new_order/screens/order_products.dart';
 import 'package:pos_app/order/screens/order_history.dart';
 import 'package:pos_app/order/screens/order_page.dart';
 import 'package:pos_app/products/screens/product_list_costing.dart';
@@ -89,7 +90,7 @@ class _DashBoardState extends State<DashBoard> {
         title: "Variants", svgIcon: CommonSvgFiles().quickActtionSvg4),
     QuicKActionModel(
         title: "Stock Adjust List",
-        svgIcon: CommonSvgFiles().quickActtionSvg4),
+        svgIcon: CommonSvgFiles().stockAdjust),
     QuicKActionModel(
         title: "Store Managers", svgIcon: CommonSvgFiles().quickActtionSvg1),
     QuicKActionModel(
@@ -120,17 +121,17 @@ class _DashBoardState extends State<DashBoard> {
         title: "Products And Variants",
         svgIcon: CommonSvgFiles().quickActtionSvg3),
     QuicKActionModel(
-        title: "Stock Adjust", svgIcon: CommonSvgFiles().quickActtionSvg4),
+        title: "Stock Adjust", svgIcon: CommonSvgFiles().stockAdjust),
     QuicKActionModel(
-        title: "Order History", svgIcon: CommonSvgFiles().quickActtionSvg4),
+        title: "Order History", svgIcon: CommonSvgFiles().orderHistory),
     QuicKActionModel(
-        title: "Add Costing", svgIcon: CommonSvgFiles().quickActtionSvg3),
+        title: "Add Costing", svgIcon: CommonSvgFiles().addCost),
     QuicKActionModel(
         title: "Manage Stock", svgIcon: CommonSvgFiles().quickActtionSvg2),
   ];
 
   final List<Widget> storeScreens = [
-    const OrderPage(),
+    const OrderProducts(),
     const ProductsAndVariants(),
     const VariantsListForStockAdjust(),
     const OrderHistory(),

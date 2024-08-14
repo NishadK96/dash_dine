@@ -44,8 +44,8 @@ class _WareHouseDetailPageState extends State<WareHouseDetailPage> {
     context.read<ProductListBloc>().add(GetAllProducts(
         underWareHouse: true, inventoryId: widget.warehouses?.id));
   }
-int productCount=0;
-int storeCount=0;
+String productCount="0";
+String storeCount="0";
   List<ManagerList> managerList=[];
   bool isLoading=true;
   @override
@@ -123,14 +123,14 @@ int storeCount=0;
     BlocListener<ManageStoreBloc, ManageStoreState>(
     listener: (context, state) {
     if (state is ListStoresSuccess) {
-    storeCount = state.productList.length;
+    storeCount = state.stores.count??"0";
     setState(() {});
     }
     },),
         BlocListener<ProductListBloc,ProductListState>(listener: (context, state) {
           if(state is ProductListSuccess)
             {
-              productCount=state.productList.length;
+              productCount=state.productList.count??"0";
               setState(() {
 
               });

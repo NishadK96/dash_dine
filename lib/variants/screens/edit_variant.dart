@@ -141,7 +141,7 @@ class _EditVariantState extends State<EditVariant> {
             listener: (context, state) {
               if (state is ProductListLoading) {}
               if (state is ProductListSuccess) {
-                productList = state.productList;
+                productList = state.productList.data;
                 setState(() {});
               }
               if (state is ProductListFailed) {

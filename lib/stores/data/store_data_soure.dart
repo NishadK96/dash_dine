@@ -209,15 +209,16 @@ class StoreDataSource {
     }
   }
 
-  Future<DoubleResponse> getAllStores(
-      String searchKey, String? warehouseId) async {
+  Future<PaginatedResponse> getAllStores(
+      {String? searchKey, String? warehouseId, int? pageNo}) async {
     try {
-      print('sdjhgchsjdx');
-      final response = await client.get(
+      print('saaarchhhhh $searchKey');
+      print('sdjhgchsjdx ${PosUrls.listStores}?warehouse_id=$warehouseId');
+      final response = await client.get(searchKey!=null && searchKey!=""?"${PosUrls.listStores}?search_name=$searchKey":
         authentication.authenticatedUser.userType == "wmanager"
             ? "${PosUrls.listStores}?warehouse_id=${authentication.authenticatedUser.businessData?.businessId}"
             : warehouseId == null || warehouseId == ""
-                ? "${PosUrls.listStores}?search_name=$searchKey"
+                ? "${PosUrls.listStores}?search_name=$searchKey&page=$pageNo"
                 : "${PosUrls.listStores}?warehouse_id=$warehouseId",
         options: Options(
           headers: {
@@ -226,23 +227,21 @@ class StoreDataSource {
           },
         ),
       );
+      print("resssss $response");
       if (response.data['status'] == "success") {
         List<StoreModel> stores = [];
         for (var element in response.data['data']['results']) {
           stores.add(StoreModel.fromJson(element));
         }
 
-        return DoubleResponse(true, stores);
+        return PaginatedResponse(true,stores,response.data['data']['next'],response.data['data']['count'].toString());
       } else {
         // If the response status is not 'success', handle the error here
-        return DoubleResponse(false, null);
+        return PaginatedResponse(false,null,null,null);
       }
     } catch (e) {
       // If an exception occurs during the request, handle it here
-      return DoubleResponse(
-        false,
-        null,
-      );
+      return PaginatedResponse(false,null,null,null);
     }
   }
 

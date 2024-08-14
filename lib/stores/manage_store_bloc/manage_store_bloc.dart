@@ -4,6 +4,7 @@ import 'package:pos_app/stock_adjustments/data/admin_data_source.dart';
 import 'package:pos_app/stock_adjustments/model/stock_adjust_admin_model.dart';
 import 'package:pos_app/stores/data/store_data_soure.dart';
 import 'package:pos_app/stores/models/store_model.dart';
+import 'package:pos_app/utils/data_response.dart';
 import 'package:pos_app/variants/model/assign_model.dart';
 
 part 'manage_store_event.dart';
@@ -18,7 +19,10 @@ class ManageStoreBloc extends Bloc<ManageStoreEvent, ManageStoreState> {
   @override
   Stream<ManageStoreState> mapEventToState(ManageStoreEvent event) async* {
     if (event is GetAllStores) {
-      yield* getAllStores(event.searchKey??"",event.warehouseId);
+      yield* getAllStores(searchKey: event.searchKey??"",warehouseId: event.warehouseId,pageNo: event.pageNo);
+    }
+    else  if (event is SearchStore) {
+      yield* searchAllStores(searchKey: event.searchKey??"",warehouseId: event.warehouseId,pageNo: event.pageNo);
     }
     if (event is GetListReceivingStockInventory) {
       yield* getlistReceivingStockInventory();
@@ -39,13 +43,26 @@ class ManageStoreBloc extends Bloc<ManageStoreEvent, ManageStoreState> {
     }
   }
 
-  Stream<ManageStoreState> getAllStores(String searchKey,String? warehouseId) async* {
+  Stream<ManageStoreState> getAllStores(
+      {String? searchKey, String? warehouseId, int? pageNo}) async* {
     yield ListStoresLoading();
-    final dataResponse = await _dataSource.getAllStores(searchKey,warehouseId);
-    if (dataResponse.data1) {
-      yield ListStoresSuccess(productList: dataResponse.data2);
+    final dataResponse = await _dataSource.getAllStores(searchKey: searchKey,warehouseId: warehouseId,pageNo: pageNo);
+    if (dataResponse.isSuccess==true) {
+      yield ListStoresSuccess(stores: dataResponse);
     } else {
       yield ListStoresFailed();
+    }
+  }
+
+  Stream<ManageStoreState> searchAllStores(
+      {String? searchKey, String? warehouseId, int? pageNo}) async* {
+        print("searrchhhhhhh");
+    yield SearchStoresLoading();
+    final dataResponse = await _dataSource.getAllStores(searchKey: searchKey,warehouseId: warehouseId,pageNo: pageNo);
+    if (dataResponse.isSuccess==true) {
+      yield SearchStoresSuccess(stores: dataResponse);
+    } else {
+      yield SearchStoresFailed();
     }
   }
 
