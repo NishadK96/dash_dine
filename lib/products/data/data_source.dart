@@ -11,50 +11,50 @@ import 'package:pos_app/variants/model/variant_model.dart';
 
 class ProductDataSource {
   Dio client = Dio();
-Future<DoubleResponse> editProduct({
+  Future<DoubleResponse> editProduct({
     required String name,
     required String description,
-     required int id,
+    required int id,
     required String updatedBy,
-     File? image,
+    File? image,
     required String costingType,
   }) async {
-print("jhashvxgjehjsyhdxjheshydxkj $image");
- final FormData formData;
-if(image!=null){
-    String filePath = "";
-    filePath = image!.path;    
-    final mime = lookupMimeType(filePath)!.split("/");
-    final fileData = await MultipartFile.fromFile(filePath,
-        contentType: MediaType(mime.first, mime.last));
-        
+    print("jhashvxgjehjsyhdxjheshydxkj $image");
+    final FormData formData;
+    if (image != null) {
+      String filePath = "";
+      filePath = image!.path;
+      final mime = lookupMimeType(filePath)!.split("/");
+      final fileData = await MultipartFile.fromFile(filePath,
+          contentType: MediaType(mime.first, mime.last));
 
-     formData = FormData.fromMap({
-      "image":image==null? null:fileData,
-      "name": name,
-      "description": description,
-      "updated_by": updatedBy,
-      "costing_type": costingType
-    });
-}else{
-    formData = FormData.fromMap({
-      "image":null,
-      "name": name,
-      "description": description,
-      "updated_by": updatedBy,
-      "costing_type": costingType
-    });
-}
+      formData = FormData.fromMap({
+        "image": image == null ? null : fileData,
+        "name": name,
+        "description": description,
+        "updated_by": updatedBy,
+        "costing_type": costingType
+      });
+    } else {
+      formData = FormData.fromMap({
+        "image": null,
+        "name": name,
+        "description": description,
+        "updated_by": updatedBy,
+        "costing_type": costingType
+      });
+    }
     final response = await client.patch(
       "${PosUrls.deleteProduct}$id",
-      data:image==null? {
-       "image":null,
-      "name": name,
-      "description": description,
-      "updated_by": updatedBy,
-      "costing_type": costingType
-
-      }:formData,
+      data: image == null
+          ? {
+              "image": null,
+              "name": name,
+              "description": description,
+              "updated_by": updatedBy,
+              "costing_type": costingType
+            }
+          : formData,
       options: Options(
         headers: {
           'Content-Type': 'application/json',
@@ -65,6 +65,7 @@ if(image!=null){
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
+
   Future<DoubleResponse> createProduct({
     required String name,
     required String description,
@@ -74,7 +75,7 @@ if(image!=null){
   }) async {
     String filePath = "";
     filePath = image.path;
-    
+
     final mime = lookupMimeType(filePath)!.split("/");
     final fileData = await MultipartFile.fromFile(filePath,
         contentType: MediaType(mime.first, mime.last));
@@ -99,7 +100,8 @@ if(image!=null){
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
- Future<DoubleResponse>deleteProduct({
+
+  Future<DoubleResponse> deleteProduct({
     required String productId,
   }) async {
     final response = await client.delete(
@@ -151,8 +153,8 @@ if(image!=null){
     // final mime = lookupMimeType(filePath)!.split("/");
     // final fileData = await MultipartFile.fromFile(filePath,
     //     contentType: MediaType(mime.first, mime.last));
-    final FormData formData = FormData.fromMap(
-        {"name": name, "description": description});
+    final FormData formData =
+        FormData.fromMap({"name": name, "description": description});
 
     final response = await client.post(
       PosUrls.createAttribute,
@@ -167,7 +169,8 @@ if(image!=null){
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
-Future<DoubleResponse> editAttribute({
+
+  Future<DoubleResponse> editAttribute({
     required String name,
     required String description,
     required int id,
@@ -177,8 +180,8 @@ Future<DoubleResponse> editAttribute({
     // final mime = lookupMimeType(filePath)!.split("/");
     // final fileData = await MultipartFile.fromFile(filePath,
     //     contentType: MediaType(mime.first, mime.last));
-    final FormData formData = FormData.fromMap(
-        {"name": name, "description": description});
+    final FormData formData =
+        FormData.fromMap({"name": name, "description": description});
 
     final response = await client.patch(
       "${PosUrls.editAttribute}$id",
@@ -193,12 +196,10 @@ Future<DoubleResponse> editAttribute({
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
-Future<DoubleResponse> deleteAttribute({
-    required int id
-  }) async {
+
+  Future<DoubleResponse> deleteAttribute({required int id}) async {
     final response = await client.delete(
       "${PosUrls.editAttribute}$id",
-    
       options: Options(
         headers: {
           'Content-Type': 'application/json',
@@ -209,15 +210,26 @@ Future<DoubleResponse> deleteAttribute({
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
+
   Future<PaginatedResponse> getAllProducts(
-      {bool? costing, bool? isInventory, int? inventoryId,String element="",bool? fromOrder,bool? underWareHouse,int? pageNo}) async {
+      {bool? costing,
+      bool? isInventory,
+      int? inventoryId,
+      String element = "",
+      bool? fromOrder,
+      bool? underWareHouse,
+      int? pageNo}) async {
     try {
-      String path =underWareHouse==true? "${PosUrls.listProductForWareHouse}$inventoryId":fromOrder==true? "${PosUrls.listProductForInventory}$inventoryId":costing == true
-          ? PosUrls.listProductsForCosting
-          : isInventory == true
-              ? PosUrls.productListByInventory + inventoryId.toString()
-              : "${PosUrls.productList}?element=$element&page=$pageNo";
-     print("searchingggg $path");
+      String path = underWareHouse == true
+          ? "${PosUrls.listProductForWareHouse}$inventoryId"
+          : fromOrder == true
+              ? "${PosUrls.listProductForInventory}$inventoryId"
+              : costing == true
+                  ? PosUrls.listProductsForCosting
+                  : isInventory == true
+                      ? PosUrls.productListByInventory + inventoryId.toString()
+                      : "${PosUrls.productList}?element=$element&page=${pageNo??""}";
+      print("searchingggg $path");
       final response = await client.get(
         path,
         options: Options(
@@ -227,7 +239,7 @@ Future<DoubleResponse> deleteAttribute({
           },
         ),
       );
-     print("searchingggg $response");
+      print("searchingggg $response");
 
       if (response.data['status'] == 'success') {
         List<ProductList> productList = [];
@@ -235,15 +247,19 @@ Future<DoubleResponse> deleteAttribute({
           productList.add(ProductList.fromJson(element));
         }
 
-        return PaginatedResponse(true,productList,response.data['data']['next'],response.data['data']['count'].toString());
+        return PaginatedResponse(
+            true,
+            productList,
+            response.data['data']['next'],
+            response.data['data']['count'].toString());
       } else {
         // If the response status is not 'success', handle the error here
-        return PaginatedResponse(false,null,null,null);
+        return PaginatedResponse(false, null, null, null);
       }
     } catch (e) {
       print("eeeeee $e");
       // If an exception occurs during the request, handle it here
-      return PaginatedResponse(false,null,null,null);
+      return PaginatedResponse(false, null, null, null);
     }
   }
 

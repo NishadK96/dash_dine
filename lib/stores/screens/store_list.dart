@@ -89,7 +89,16 @@ class _StoreListState extends State<StoreList> {
                     isLoading == false
                 ? NoDataPage(
                     name: "Create new Store",
-                    onTap: () {},
+                    onTap: () {
+                      FocusScope.of(context)
+                          .requestFocus(
+                          new FocusNode());
+                      PersistentNavBarNavigator
+                          .pushNewScreen(context,
+                          withNavBar: false,
+                          screen:
+                          const CreateNewStore());
+                    },
                     isButton: authentication.authenticatedUser.userType ==
                             "admin" ||
                         authentication.authenticatedUser.userType == "wmanager")

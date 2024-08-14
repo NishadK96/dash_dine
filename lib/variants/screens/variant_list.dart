@@ -239,9 +239,10 @@ class _VariantsListScreenState extends State<VariantsListScreen> {
                           child: CurvedTextField(
                             title: "Search variants",
                             onChanged: (val) {
+                              variantList.clear();
                               context
                                   .read<VariantBloc>()
-                                  .add(GetAllVariants(element: val));
+                                  .add(GetAllVariants(element: val,pageNo: 1));
                             },
                             isSearch: true,
                           )),

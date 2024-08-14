@@ -12,6 +12,7 @@ class PosUrls{
   static const String warehouseDashboardUrl ="$baseUrl/product/dashbord-for-warehouse-admin/1";
   static const String productList="$baseUrl/product/list-product";
   static const String productListByInventory="$baseUrl/costing/list-product-by-inventory-for-costing/";
+  static const String productListByInventoryForOrder="$baseUrl/order/list-product-by-inventory-for-order/";
   static const String varientList="$baseUrl/product/list-variant";
   static const String varientListInWareHouse="$baseUrl/product/list-variant-by-warehouse/";
    static const String varientDetails="$baseUrl/product/read-edit-delete-variant/";

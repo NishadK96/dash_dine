@@ -117,7 +117,7 @@ class _EditProductState extends State<EditProduct> {
                 isButtonLoading = false;
                 setState(() {});
                 Fluttertoast.showToast(msg: state.message);
-                context.read<ProductListBloc>().add(GetAllProducts());
+                context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                 Navigator.pop(context);
               }
               if (state is CreateProductFailed) {
@@ -358,7 +358,7 @@ class _EditProductState extends State<EditProduct> {
                                   setState(() {
                                     
                                   });
-                                   context.read<ProductListBloc>().add(GetAllProducts());
+                                   context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                                    Navigator.pop(context);
                                   Fluttertoast.showToast(msg: value.data2);
                                 }else{

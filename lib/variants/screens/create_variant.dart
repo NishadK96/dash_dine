@@ -588,7 +588,7 @@ class _CreateNewVariantState extends State<CreateNewVariant> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
-                        child: ListView.separated(
+                        child: ListView.separated(physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemCount: attributeList.length,

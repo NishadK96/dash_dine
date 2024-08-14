@@ -38,7 +38,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   String? count;
   @override
   void initState() {
-    context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
+    context.read<ProductListBloc>().add(GetAllProducts());
     super.initState();
   }
 

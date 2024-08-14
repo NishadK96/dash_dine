@@ -69,14 +69,14 @@ class _OrderProductsState extends State<OrderProducts> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => YourCartPage(
-                        orderLines: productCartList,
-                      ),),
+                      MaterialPageRoute(
+                        builder: (context) => YourCartPage(
+                          orderLines: productCartList,
+                        ),
+                      ),
                     ).then((result) {
                       if (result == true) {
-                        setState(() {
-
-                        });
+                        setState(() {});
                       }
                     });
                   },
@@ -421,9 +421,10 @@ class _OrderProductsState extends State<OrderProducts> {
                                             topRight: Radius.circular(7)),
                                         color: Colors.white,
                                       ),
-                                      child: ClipRRect(borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(7),
-                                    topRight: Radius.circular(7)),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(7),
+                                            topRight: Radius.circular(7)),
                                         child: Image.network(
                                           productList[index].image,
                                           fit: BoxFit.cover,
@@ -442,7 +443,7 @@ class _OrderProductsState extends State<OrderProducts> {
                                       ),
                                     ),
                                     Text(
-                                      "SAR ${productList[index].price}",
+                                      "${productList[index].costingType}",
                                       style: GoogleFonts.urbanist(
                                         color: ColorTheme.secondary,
                                         fontSize: 13.sp,
@@ -616,13 +617,23 @@ class _VariantCardState extends State<VariantCard> {
           padding: const EdgeInsets.only(right: 10),
           child: InkWell(
             onTap: () {
-              if (
-              productAddedListIds.contains(widget.variantDetails.id)) {
+              if (productAddedListIds.contains(widget.variantDetails.id)) {
                 productAddedListIds.remove(widget.variantDetails.id ?? 1);
                 productCartList.removeWhere((orderLine) =>
                     orderLine.variantId == (widget.variantDetails.id ?? 0));
                 setState(() {});
-              } else {
+              }else if (widget.variantDetails
+                  .priceData
+                  ?.sellingPrice ==
+                  null &&
+                  widget.variantDetails
+                      .costingType !=
+                      "dynamic price") {
+                Fluttertoast.showToast(
+                    msg:
+                    "Oops! please add cost to this product");
+              }
+              else {
                 productAddedListIds.add(widget.variantDetails.id ?? 1);
                 productCartList.add(OrderLines(
                     image: widget.variantDetails.image ?? '',

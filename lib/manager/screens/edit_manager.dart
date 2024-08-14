@@ -155,7 +155,7 @@ class _EditManagerPageState extends State<EditManagerPage> {
               if (state is CreateProductLoading) {}
               if (state is CreateProductSuccess) {
                 Fluttertoast.showToast(msg: state.message);
-                context.read<ProductListBloc>().add(GetAllProducts());
+                context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                 Navigator.pop(context);
               }
               if (state is CreateProductFailed) {
