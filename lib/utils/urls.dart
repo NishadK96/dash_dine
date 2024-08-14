@@ -21,7 +21,7 @@ class PosUrls{
   static const String createProduct="$baseUrl/product/create-product";
   static const String editVariantImageUrl="$baseUrl/product/edit-variant-image/";
   static const String deleteProduct="$baseUrl/product/read-edit-delete-product/";
-  static const String createVariant="$baseUrl/product/create-variant";
+  static const String createVariant="$baseUrl/product/create-variantt-new";
   static const String createOrder="$baseUrl/order/create-order";
   static const String editOrder="$baseUrl/order/patch-order";
   static const String createAttribute="$baseUrl/product/create-attribute";

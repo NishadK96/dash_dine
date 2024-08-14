@@ -13,6 +13,12 @@ class GetAllStores extends ManageStoreEvent {
   final int? pageNo;
   GetAllStores({this.searchKey, this.warehouseId,this.pageNo});
 }
+class SearchStore extends ManageStoreEvent {
+ final String? searchKey;
+  final String? warehouseId;
+  final int? pageNo;
+  SearchStore({this.searchKey, this.warehouseId,this.pageNo});
+}
 class GetListReceivingStockInventory extends ManageStoreEvent {
 
 }

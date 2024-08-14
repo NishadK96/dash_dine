@@ -66,7 +66,7 @@ class _EditManagerPageState extends State<EditManagerPage> {
         TextEditingController(text: widget.managerDetails?.contactNumber);
     emailController = TextEditingController(text: widget.managerDetails?.email);
     // if (widget.managerType == "wmanager") {
-    //   context.read<ManageWarehouseBloc>().add(GetAllWarehouses());
+      // context.read<ManageWarehouseBloc>().add(GetAllWarehouses());
     // } else {
     //   context.read<ManageStoreBloc>().add(GetAllStores());
     // }

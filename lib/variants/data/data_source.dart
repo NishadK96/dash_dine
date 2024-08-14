@@ -16,8 +16,7 @@ import 'package:pos_app/variants/screens/edit_variant.dart';
 
 class VariantDataSource {
   Dio client = Dio();
-
-  Future<DoubleResponse> createVariant(
+Future<DoubleResponse> createVariant(
       {required String name,
       required String description,
       required String updatedBy,
@@ -26,7 +25,9 @@ class VariantDataSource {
       required List<int> attributeIDs,
       required int productId}) async {
     String? filePath = "";
-    print("check new at services $attributeIDs, $stockType");
+    String newAttributeId=attributeIDs.join(",");
+    print("check new at services $newAttributeId, $stockType");
+
     filePath = image?.path;
     final mime = lookupMimeType(filePath ?? "")!.split("/");
     final fileData = await MultipartFile.fromFile(filePath ?? "",
@@ -39,7 +40,7 @@ class VariantDataSource {
       "updated_by": updatedBy,
       "stock_type": stockType,
       "product_id": productId,
-      "attribute_id": attributeIDs,
+      "attribute_id": newAttributeId,
     });
     final response = await client.post(
       PosUrls.createVariant,
@@ -55,6 +56,7 @@ class VariantDataSource {
     return DoubleResponse(
         response.data['status'] == 'success', response.data['message']);
   }
+
 
   Future<DoubleResponse> editVariant(
       {required String name,

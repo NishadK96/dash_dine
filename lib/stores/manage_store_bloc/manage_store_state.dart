@@ -21,6 +21,17 @@ final   PaginatedResponse stores ;
 }
 
 class ListStoresFailed extends ManageStoreState {}
+
+class SearchStoresInitial extends ManageStoreState {}
+
+class SearchStoresLoading extends ManageStoreState {}
+
+class SearchStoresSuccess extends ManageStoreState {
+final   PaginatedResponse stores ;
+ const SearchStoresSuccess({required this.stores});
+}
+
+class SearchStoresFailed extends ManageStoreState {}
 class ListStoresUnderWareHouseLoading extends ManageStoreState {}
 
 class ListStoresUnderWareHouseSuccess extends ManageStoreState {
