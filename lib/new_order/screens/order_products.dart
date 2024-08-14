@@ -13,6 +13,7 @@ import 'package:pos_app/common_widgets/order_app_bar.dart';
 import 'package:pos_app/common_widgets/text_field.dart';
 import 'package:pos_app/products/bloc/product_list_bloc.dart';
 import 'package:pos_app/products/model/model.dart';
+import 'package:pos_app/products/screens/add_dynamic_price.dart';
 import 'package:pos_app/products/widgets/attribute_tile_card.dart';
 import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/loading_page.dart';
@@ -471,12 +472,14 @@ class VariantListForOrder extends StatefulWidget {
       {super.key, required this.productDetails, required this.qty});
   final ProductList productDetails;
   final int qty;
+
   @override
   State<VariantListForOrder> createState() => _VariantListForOrderState();
 }
 
 class _VariantListForOrderState extends State<VariantListForOrder> {
   bool isLoading = true;
+
   List<VariantsListModel> variantList = [];
   @override
   Widget build(BuildContext context) {
@@ -607,6 +610,8 @@ class VariantCard extends StatefulWidget {
 }
 
 class _VariantCardState extends State<VariantCard> {
+  final TextEditingController priceController = TextEditingController();
+  int price = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -617,11 +622,69 @@ class _VariantCardState extends State<VariantCard> {
           padding: const EdgeInsets.only(right: 10),
           child: InkWell(
             onTap: () {
+
               if (productAddedListIds.contains(widget.variantDetails.id)) {
                 productAddedListIds.remove(widget.variantDetails.id ?? 1);
                 productCartList.removeWhere((orderLine) =>
                     orderLine.variantId == (widget.variantDetails.id ?? 0));
                 setState(() {});
+              } else  if (widget.variantDetails
+                  .costingType ==
+                  "dynamic price") {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor:
+                  Colors.white,
+                  context: context,
+                  builder: (context) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery
+                              .of(context)
+                              .viewInsets
+                              .bottom),
+                      child:
+                      StatefulBuilder(
+                        builder: (context,
+                            setState) {
+                          return AddDynamicProductCosting(
+                            onChanged:
+                                (text) {
+                              setState(() {
+                                price = int
+                                    .parse(
+                                    text);
+                              });
+                            },
+                            priceController:
+                            priceController,
+                            onAdd: () {
+                              productAddedListIds.add(widget.variantDetails.id ?? 1);
+                              productCartList.add(OrderLines(
+                                  image: widget.variantDetails.image ?? '',
+                                  variantId: widget.variantDetails.id ?? 0,
+                                  productId: widget.variantDetails.productId ?? 1,
+                                  quantity: widget.qty,
+                                  sellingPrice:
+                                  price,
+                                  variantName: widget.variantDetails.name ?? "",
+                                  productName: widget.variantDetails.productName ?? "",
+                                  deliveryNote: ""));
+                              priceController
+                                  .clear();
+                              price = 0;
+                              Navigator.pop(
+                                  context);
+                            },
+                            price: price,
+                            prodId:
+                                0,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
               }else if (widget.variantDetails
                   .priceData
                   ?.sellingPrice ==
