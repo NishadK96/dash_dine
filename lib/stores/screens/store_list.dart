@@ -313,20 +313,33 @@ class _StoreListState extends State<StoreList> {
                                           isSearch: true,
                                         ),
                                       ),SizedBox(width: 6,),
-                                      SizedBox(height: 45.h,
+                                      SizedBox(height: 47.h,
                                           width: 144.w,
                                           child: StoreDropDownWidget(
                                             value: selectedValue,
                                             items: warehouses,
                                             onChange: (val) {
-                                              stores.clear();
-                                              context
-                                                  .read<ManageStoreBloc>()
-                                                  .add(GetAllStores(
-                                                      warehouseId: val,
-                                                      searchKey: null,
-                                                      pageNo: 1));
+
+                                              if(val=="All Warehouses")
+                                                {
+                                                  isLoading=true;
+                                                  stores.clear();
+                                                  context
+                                                      .read<ManageStoreBloc>()
+                                                      .add(GetAllStores(
+                                                    warehouseId: null,));
+                                                }else {
+                                                isLoading=true;
+                                                stores.clear();
+                                                context
+                                                    .read<ManageStoreBloc>()
+                                                    .add(GetAllStores(
+                                                    warehouseId: val,
+                                                    searchKey: null,
+                                                    pageNo: 1));
+                                              }
                                               selectedValue = val;
+
                                               setState(() {});
                                             },
                                           )),

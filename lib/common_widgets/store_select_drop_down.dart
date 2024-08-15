@@ -4,13 +4,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pos_app/products/widgets/attribute_tile_card.dart';
 import 'package:pos_app/utils/colors.dart';
+import 'package:pos_app/warehouse/models/warehouse_model.dart';
 
-class StoreDropDownWidget extends StatelessWidget {
+class StoreDropDownWidget extends StatefulWidget {
   final String? value;
   final Function(String?)? onChange;
-  final List<dynamic>? items;
+  final List<WareHouseModel>? items;
   const StoreDropDownWidget(
       {super.key, required this.value, this.onChange, this.items});
+
+  @override
+  State<StoreDropDownWidget> createState() => _StoreDropDownWidgetState();
+}
+
+class _StoreDropDownWidgetState extends State<StoreDropDownWidget> {
+  @override
+  void initState()
+  {
+    super.initState();
+    // widget.items?.insert(0,WareHouseModel(name: "All Warehouses"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +49,22 @@ class StoreDropDownWidget extends StatelessWidget {
               ),
             ],
           ),
-          items: items!
+          items: widget.items!
               .map((dynamic item) => DropdownMenuItem<String>(alignment: Alignment.centerLeft,
-                    value: item.id.toString(),
-                    child: Text(
-                      item.name.toString().toTitleCase() ?? "",
-                      style: GoogleFonts.urbanist(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ))
+            value: item.id.toString(),
+            child: Text(
+              item.name.toString().toTitleCase() ?? "",
+              style: GoogleFonts.urbanist(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ))
               .toList(),
-          value: value,
-          onChanged: onChange,
+          value: widget.value,
+          onChanged: widget.onChange,
           // (String? value) {
           //   setState(() {
           //     selectedValue = value;
@@ -78,10 +91,10 @@ class StoreDropDownWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: 5, right: 5,top: 5),
             scrollPadding: const EdgeInsets.all(10),
             maxHeight: 200,
-            width: w1/2,direction: DropdownDirection.textDirection,
+            width: w1/2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              // color: Colors.redAccent,
+              color: ColorTheme.secondary,
             ),
             offset: const Offset(-20, 0),
             scrollbarTheme: ScrollbarThemeData(
