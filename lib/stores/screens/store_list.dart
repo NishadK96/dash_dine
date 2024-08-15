@@ -10,6 +10,7 @@ import 'package:pos_app/auth/authenticate.dart';
 import 'package:pos_app/common_widgets/app_bar.dart';
 import 'package:pos_app/common_widgets/buttons.dart';
 import 'package:pos_app/common_widgets/drop_down_widget.dart';
+import 'package:pos_app/common_widgets/store_select_drop_down.dart';
 import 'package:pos_app/common_widgets/text_field.dart';
 import 'package:pos_app/no_data.dart';
 import 'package:pos_app/no_search_data.dart';
@@ -296,8 +297,8 @@ class _StoreListState extends State<StoreList> {
                                       bottom: 0),
                                   child: Row(
                                     children: [
-                                      Expanded(
-                                        flex: 2,
+                                      SizedBox(
+                                        width: 244.w,
                                         child: CurvedTextField(
                                           controller: _searchController,
                                           onChanged: (p0) {
@@ -311,10 +312,10 @@ class _StoreListState extends State<StoreList> {
                                           title: "Search stores",
                                           isSearch: true,
                                         ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: DropDownWidget(
+                                      ),SizedBox(width: 6,),
+                                      SizedBox(height: 45.h,
+                                          width: 144.w,
+                                          child: StoreDropDownWidget(
                                             value: selectedValue,
                                             items: warehouses,
                                             onChange: (val) {
