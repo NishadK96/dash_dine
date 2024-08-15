@@ -20,7 +20,7 @@ import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/utils/svg_files/common_svg.dart';
 import 'package:pos_app/products/widgets/products_tile_card.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+List<ProductList> productList = [];
 class ProductsListScreen extends StatefulWidget {
   const ProductsListScreen({super.key});
 
@@ -38,11 +38,12 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
   String? count;
   @override
   void initState() {
-    context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
+    productList.clear();
+    context.read<ProductListBloc>().add(GetAllProducts());
     super.initState();
   }
 
-  List<ProductList> productList = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -143,8 +144,12 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
             },
           ),
           onLoading: () {
+              pageNo++;
             if (hasNextPage == true) {
-              context.read<ProductListBloc>().add(GetAllProducts(pageNo: ++pageNo));
+              context.read<ProductListBloc>().add(GetAllProducts(pageNo: pageNo));
+              if (mounted) {
+                refreshController.loadComplete();
+              }
             } else {
               log(1.1);
             }

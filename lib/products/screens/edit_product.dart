@@ -12,6 +12,7 @@ import 'package:pos_app/common_widgets/text_field.dart';
 import 'package:pos_app/products/bloc/product_list_bloc.dart';
 import 'package:pos_app/products/data/data_source.dart';
 import 'package:pos_app/products/model/model.dart';
+import 'package:pos_app/products/screens/products_list.dart';
 import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/svg_files/common_svg.dart';
 
@@ -117,7 +118,7 @@ class _EditProductState extends State<EditProduct> {
                 isButtonLoading = false;
                 setState(() {});
                 Fluttertoast.showToast(msg: state.message);
-                context.read<ProductListBloc>().add(GetAllProducts());
+                context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                 Navigator.pop(context);
               }
               if (state is CreateProductFailed) {
@@ -354,11 +355,13 @@ class _EditProductState extends State<EditProduct> {
                               updatedBy: "").then((value){
                                 if(value.data1==true)
                                 {
+
                                   isButtonLoading=false;
                                   setState(() {
                                     
                                   });
-                                   context.read<ProductListBloc>().add(GetAllProducts());
+                                  productList.clear();
+                                   context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                                    Navigator.pop(context);
                                   Fluttertoast.showToast(msg: value.data2);
                                 }else{

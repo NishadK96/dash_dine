@@ -23,7 +23,7 @@ import 'package:pos_app/variants/screens/create_variant.dart';
 import 'package:pos_app/variants/screens/widgets/variant_product_card.dart';
 import 'package:pos_app/variants/variant_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+List<VariantsListModel> variantList = [];
 class VariantsListScreen extends StatefulWidget {
   const VariantsListScreen({super.key});
 
@@ -39,8 +39,11 @@ class _VariantsListScreenState extends State<VariantsListScreen> {
   bool hasNextPage = false;
   int pageNo = 1;
   String? count;
+
+
   @override
   void initState() {
+    variantList.clear();
     if (authentication.authenticatedUser.userType == "wmanager") {
       context.read<VariantBloc>().add(GetAllVariants(
           pageNo: 1,
@@ -54,7 +57,7 @@ class _VariantsListScreenState extends State<VariantsListScreen> {
     super.initState();
   }
 
-  List<VariantsListModel> variantList = [];
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -66,7 +69,19 @@ class _VariantsListScreenState extends State<VariantsListScreen> {
         listeners: [
           BlocListener<VariantBloc, VariantState>(
             listener: (context, state) {
+
+              if (state is CreateVariantSuccess) {
+                pageNo=1;
+                variantList.clear();
+                context.read<VariantBloc>().add(GetAllVariants());
+                setState(() {});
+              }
               if (state is DeleteVariantSuccess) {
+                pageNo=1;
+                variantList.clear();
+                setState(() {
+
+                });
                 Fluttertoast.showToast(msg: state.message);
                 context.read<VariantBloc>().add(GetAllVariants());
               }
@@ -78,6 +93,7 @@ class _VariantsListScreenState extends State<VariantsListScreen> {
                count= state.variantsList.count;
                 isLoading = false;
                 setState(() {});
+                print("|kdhfbj ${state.variantsList.nextPageUrl}");
                 if (state.variantsList.nextPageUrl == null) {
                   hasNextPage = false;
                   setState(() {});
@@ -160,20 +176,25 @@ class _VariantsListScreenState extends State<VariantsListScreen> {
                   },
                 ),
                 onLoading: () {
+pageNo++;
                   if (hasNextPage == true) {
                     if (authentication.authenticatedUser.userType ==
                         "wmanager") {
                       context.read<VariantBloc>().add(GetAllVariants(
-                          pageNo: ++pageNo,
+                          pageNo: pageNo,
                           fromWarehouse: true,
                           id: authentication
                                   .authenticatedUser.businessData?.businessId
                                   .toString() ??
                               ""));
                     } else {
+                      print("paahsfgh $pageNo");
                       context
                           .read<VariantBloc>()
-                          .add(GetAllVariants(pageNo: ++pageNo));
+                          .add(GetAllVariants(pageNo: pageNo));
+                    }
+                    if (mounted) {
+                      refreshController.loadComplete();
                     }
                   } else {
                     log(1.1);
@@ -239,9 +260,10 @@ class _VariantsListScreenState extends State<VariantsListScreen> {
                           child: CurvedTextField(
                             title: "Search variants",
                             onChanged: (val) {
+                              variantList.clear();
                               context
                                   .read<VariantBloc>()
-                                  .add(GetAllVariants(element: val));
+                                  .add(GetAllVariants(element: val,pageNo: 1));
                             },
                             isSearch: true,
                           )),

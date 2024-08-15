@@ -26,8 +26,10 @@ import 'package:pos_app/warehouse/models/warehouse_model.dart';
 
 class EditManagerPage extends StatefulWidget {
   const EditManagerPage(
-      {super.key, required this.managerDetails, required this.managerType});
+      {super.key, required this.managerDetails,this.warehouseId, required this.managerType,this.fromDetails=false});
   final String managerType;
+  final int? warehouseId;
+  final bool? fromDetails;
   final ManagerList? managerDetails;
 
   @override
@@ -123,8 +125,14 @@ class _EditManagerPageState extends State<EditManagerPage> {
                 isCreating = false;
                 Fluttertoast.showToast(msg: state.message);
                 Navigator.pop(context);
-                context.read<ManagerBloc>().add(GetAllMangers(
-                    managerType: widget.managerDetails?.userType ?? ""));
+                if(widget.fromDetails==true)
+                  {
+                    context.read<ManagerBloc>().add(GetAllMangers(
+                        managerType: widget.managerDetails?.userType ?? "",wareHouseId: widget.warehouseId.toString()));
+                  }else {
+                  context.read<ManagerBloc>().add(GetAllMangers(
+                      managerType: widget.managerDetails?.userType ?? ""));
+                }
                 setState(() {});
               }
               if (state is ManagerEditFailed) {
@@ -155,7 +163,7 @@ class _EditManagerPageState extends State<EditManagerPage> {
               if (state is CreateProductLoading) {}
               if (state is CreateProductSuccess) {
                 Fluttertoast.showToast(msg: state.message);
-                context.read<ProductListBloc>().add(GetAllProducts());
+                context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                 Navigator.pop(context);
               }
               if (state is CreateProductFailed) {

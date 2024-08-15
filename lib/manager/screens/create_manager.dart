@@ -104,7 +104,7 @@ class _CreateManagerPageState extends State<CreateManagerPage> {
     if (widget.managerType == "wmanager") {
       context.read<ManageWarehouseBloc>().add(GetAllWarehouses(""));
     } else {
-      context.read<ManageStoreBloc>().add(GetAllStores());
+      context.read<ManageStoreBloc>().add(GetAllStores(pageNo: 1));
     }
     super.initState;
   }
@@ -190,7 +190,7 @@ class _CreateManagerPageState extends State<CreateManagerPage> {
               if (state is CreateProductLoading) {}
               if (state is CreateProductSuccess) {
                 Fluttertoast.showToast(msg: state.message);
-                context.read<ProductListBloc>().add(GetAllProducts());
+                context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                 Navigator.pop(context);
               }
               if (state is CreateProductFailed) {

@@ -19,7 +19,7 @@ class ManageStoreBloc extends Bloc<ManageStoreEvent, ManageStoreState> {
   @override
   Stream<ManageStoreState> mapEventToState(ManageStoreEvent event) async* {
     if (event is GetAllStores) {
-      yield* getAllStores(searchKey: event.searchKey??"",warehouseId: event.warehouseId,pageNo: event.pageNo);
+      yield* getAllStores(searchKey: event.searchKey??"",warehouseId: event.warehouseId,pageNo: event.pageNo??1);
     }
     else  if (event is SearchStore) {
       yield* searchAllStores(searchKey: event.searchKey??"",warehouseId: event.warehouseId,pageNo: event.pageNo);

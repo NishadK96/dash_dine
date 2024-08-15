@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DropDownWidget extends StatelessWidget {
   final String? value;
@@ -13,13 +14,13 @@ class DropDownWidget extends StatelessWidget {
     return DropdownButtonHideUnderline(
                 child: DropdownButton2<String>(
                   isExpanded: true,
-                  hint: const Row(
+                  hint:  Row(
                     children: [
                       Expanded(
                         child: Text(
                           'Select Warehouse',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),

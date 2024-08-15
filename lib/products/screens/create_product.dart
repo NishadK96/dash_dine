@@ -58,7 +58,7 @@ class _CreateNewProductState extends State<CreateNewProduct> {
                 isButtonLoading = false;
                 setState(() {});
                 Fluttertoast.showToast(msg: state.message);
-                context.read<ProductListBloc>().add(GetAllProducts());
+                context.read<ProductListBloc>().add(GetAllProducts(pageNo: 1));
                 Navigator.pop(context);
                 SuccessPopup().successAlert(context, "Product has been created successfully!");
               }

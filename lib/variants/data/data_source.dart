@@ -315,6 +315,7 @@ Future<DoubleResponse> createVariant(
   Future<PaginatedResponse> getAllVariants(
       {String? element, bool? fromWarehouse, String? id,int? pageNo}) async {
     try {
+      print("skfjhjc $pageNo");
       print("${PosUrls.varientList}?element=$element");
     String path=  authentication.authenticatedUser.userType ==
           "wmanager"

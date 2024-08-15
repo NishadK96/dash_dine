@@ -9,6 +9,7 @@ import 'package:pos_app/products/bloc/product_list_bloc.dart';
 import 'package:pos_app/products/data/data_source.dart';
 import 'package:pos_app/products/model/model.dart';
 import 'package:pos_app/products/screens/edit_product.dart';
+import 'package:pos_app/products/screens/products_list.dart';
 import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/variants/screens/widgets/variant_product_card.dart';
@@ -208,12 +209,14 @@ class _ProductsTileCardState extends State<ProductsTileCard> {
                                                                           "delete") {
                                                                         DeletePopup().deleteAlert(context, "Are you sure you want to delete\nThis Product",
                                                                         () {
+
                                                                           Navigator.pop(context);
                                                                           ProductDataSource()
                                                                               .deleteProduct(productId: widget.productCard?.id.toString() ?? "")
                                                                               .then((value) {
                                                                             if (value.data1 ==
                                                                                 true) {
+                                                                              productList.clear();
                                                                               context.read<ProductListBloc>().add(GetAllProducts());
                                                                               Fluttertoast.showToast(msg: value.data2);
                                                                               Navigator.pop(context);
