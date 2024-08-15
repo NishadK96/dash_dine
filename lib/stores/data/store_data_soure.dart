@@ -51,29 +51,37 @@ class StoreDataSource {
     required String address,
     required String city,
   }) async {
-    final response = await client.put(
-      "${PosUrls.editStore}$id",
-      data: {
-        "name": name,
-        // "description": description,
-        // "code": code,
-        // "warehouse": wareHouseId,
-        "city": city,
-        "phone_number": phone,
-        "email": email,
-        "address_line": address,
-        // "is_active": true
-      },
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+    try {
+      final response = await client.put(
+        "${PosUrls.editStore}$id",
+        data: {
+          "name": name,
+          // "description": description,
+          // "code": code,
+          // "warehouse": wareHouseId,
+          "city": city,
+          "phone_number": phone,
+          "email": email,
+          "address_line": address,
+          // "is_active": true
         },
-      ),
-    );
-    return DoubleResponse(
-        response.data['status'] == "success", response.data['message']);
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+      return DoubleResponse(
+        response.data['status'] == "success",
+        response.data['message'],
+      );
+    } catch (e) {
+      // Handle the error appropriately, possibly returning a failure response
+      return DoubleResponse(false, "Failed to edit store");
+    }
   }
+
 
   Future<DoubleResponse> readVariantForStockAllocate({
     required int variantId,
@@ -248,17 +256,23 @@ class StoreDataSource {
   Future<DoubleResponse> deleteStore({
     required String storeId,
   }) async {
-    final response = await client.delete(
-      "${PosUrls.editStore}$storeId/",
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      ),
-    );
-    return DoubleResponse(response.statusCode == 204, "Deleted Successfully");
+    try {
+      final response = await client.delete(
+        "${PosUrls.editStore}$storeId/",
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+      return DoubleResponse(response.statusCode == 204, "Deleted Successfully");
+    } catch (e) {
+      // Handle the error appropriately, possibly returning a failure response
+      return DoubleResponse(false, "Failed to delete store");
+    }
   }
+
 
   Future<DoubleResponse> getAllStoresUnerWareHouse(
       int warehouseId, int variantId) async {

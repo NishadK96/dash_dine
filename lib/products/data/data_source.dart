@@ -223,7 +223,7 @@ class ProductDataSource {
       String path = underWareHouse == true
           ? "${PosUrls.listProductForWareHouse}$inventoryId"
           : fromOrder == true
-              ? "${PosUrls.listProductForInventory}$inventoryId"
+              ? "${PosUrls.productListByInventoryForOrder}$inventoryId"
               : costing == true
                   ? PosUrls.listProductsForCosting
                   : isInventory == true
