@@ -11,6 +11,7 @@ import 'package:pos_app/stores/data/store_data_soure.dart';
 import 'package:pos_app/stores/manage_store_bloc/manage_store_bloc.dart';
 import 'package:pos_app/stores/models/store_model.dart';
 import 'package:pos_app/stores/screens/edit_store.dart';
+import 'package:pos_app/stores/screens/store_list.dart';
 import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/utils/svg_files/common_svg.dart';
@@ -18,25 +19,25 @@ import 'package:pos_app/variants/screens/widgets/variant_product_card.dart';
 import 'package:pos_app/warehouse/widgets/delete_popup.dart';
 
 class StoreTileCard extends StatefulWidget {
-
   final String? imagePro;
   final VoidCallback? onTap;
-final  StoreModel storeData;
-  const StoreTileCard({super.key, this.imagePro, this.onTap, required this.storeData});
+  final StoreModel storeData;
+  const StoreTileCard(
+      {super.key, this.imagePro, this.onTap, required this.storeData});
 
   @override
   State<StoreTileCard> createState() => _StoreTileCardState();
 }
 
 class _StoreTileCardState extends State<StoreTileCard> {
-      final List<BottomSheetModel> bottomSheetList = [
-        const BottomSheetModel(
-          value: "edit",
-          name: "Edit Store",
-        ),
-        const BottomSheetModel(
-            value: "delete", name: "Delete Store", isAlert: true),
-      ];
+  final List<BottomSheetModel> bottomSheetList = [
+    const BottomSheetModel(
+      value: "edit",
+      name: "Edit Store",
+    ),
+    const BottomSheetModel(
+        value: "delete", name: "Delete Store", isAlert: true),
+  ];
   @override
   Widget build(BuildContext context) {
     double w1 = MediaQuery.of(context).size.width;
@@ -92,32 +93,37 @@ class _StoreTileCardState extends State<StoreTileCard> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 2,),
-                    RichText(textAlign: TextAlign.center,
+                    SizedBox(
+                      height: 2,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.center,
                       text: TextSpan(
                         children: [
                           TextSpan(
-                              text: "${widget.storeData.address.toString().toTitleCase()},",
-                              style: GoogleFonts.urbanist(
-                                color: ColorTheme.secondary,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                              ),),
+                            text:
+                                "${widget.storeData.address.toString().toTitleCase()},",
+                            style: GoogleFonts.urbanist(
+                              color: ColorTheme.secondary,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           TextSpan(
-                              text: widget.storeData.city.toString().toTitleCase(),
-                              style: GoogleFonts.urbanist(
-                                color: ColorTheme.secondary,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                              ),),
+                            text:
+                                widget.storeData.city.toString().toTitleCase(),
+                            style: GoogleFonts.urbanist(
+                              color: ColorTheme.secondary,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-
                     const SizedBox(
                       height: 15,
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,7 +133,7 @@ class _StoreTileCardState extends State<StoreTileCard> {
                           width: 5,
                         ),
                         Text(
-                          widget.storeData.warehouseName??"",
+                          widget.storeData.warehouseName ?? "",
                           style: GoogleFonts.urbanist(
                             color: const Color(0xFF8390A1),
                             fontSize: 15.sp,
@@ -140,98 +146,139 @@ class _StoreTileCardState extends State<StoreTileCard> {
                 )
               ],
             ),
-            authentication
-                .authenticatedUser.userType ==
-                "wmanager"?   InkWell(onTap:  () {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return StatefulBuilder(
-              builder: (context, setState) {
-                return Container(
-                  height:isTab(context)?170: 160,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          topLeft: Radius.circular(10))),
-                  child: SingleChildScrollView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          width: 50.w,
-                          height: 7.h,
-                          decoration: BoxDecoration(
-                              color: ColorTheme.secondaryBlue,
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        ListView.separated(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.all(16),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () {
-                                  if (bottomSheetList[index].value == "edit") {
-                                    Navigator.pop(context);
-                                      PersistentNavBarNavigator.pushNewScreen(context,
-                                  withNavBar: false,
-                                  screen:  EditStore(storeData: widget.storeData,));
-                                  }
-                                  if (bottomSheetList[index].value ==
-                                      "delete") {
-                                    DeletePopup().deleteAlert(context, "Are you sure you want to delete\nStore", () {
-                                      Navigator.pop(context);
-                                      StoreDataSource().deleteStore(storeId: widget.storeData.id.toString()).then((value) {
-                                        if (value.data1 ==
-                                            true) {
-                                          context.read<ManageStoreBloc>().add(GetAllStores());
-                                          Fluttertoast.showToast(msg: value.data2);
-                                          Navigator.pop(context);
-                                        } else {
-                                          Fluttertoast.showToast(msg: value.data2);
-                                        }
-                                      },);
-                                    },);
-                                  }
-                                },
-                                child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      bottomSheetList[index].name ?? "",
-                                      style: GoogleFonts.urbanist(
-                                        color: bottomSheetList[index].isAlert ==
-                                                true
-                                            ? ColorTheme.red
-                                            : ColorTheme.text,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w600,
+            authentication.authenticatedUser.userType != "manager"
+                ? InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return StatefulBuilder(
+                            builder: (context, setState) {
+                              return Container(
+                                height: isTab(context) ? 170 : 160,
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(10),
+                                        topLeft: Radius.circular(10))),
+                                child: SingleChildScrollView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 15,
                                       ),
-                                    )),
+                                      Container(
+                                        width: 50.w,
+                                        height: 7.h,
+                                        decoration: BoxDecoration(
+                                            color: ColorTheme.secondaryBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      ),
+                                      ListView.separated(
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
+                                          padding: const EdgeInsets.all(16),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                if (bottomSheetList[index]
+                                                        .value ==
+                                                    "edit") {
+                                                  Navigator.pop(context);
+                                                  PersistentNavBarNavigator
+                                                      .pushNewScreen(context,
+                                                          withNavBar: false,
+                                                          screen: EditStore(
+                                                            storeData: widget
+                                                                .storeData,
+                                                          ));
+                                                }
+                                                if (bottomSheetList[index]
+                                                        .value ==
+                                                    "delete") {
+                                                  DeletePopup().deleteAlert(
+                                                    context,
+                                                    "Are you sure you want to delete\nStore",
+                                                    () {
+                                                      Navigator.pop(context);
+                                                      StoreDataSource()
+                                                          .deleteStore(
+                                                              storeId: widget
+                                                                  .storeData.id
+                                                                  .toString())
+                                                          .then(
+                                                        (value) {
+                                                          if (value.data1 ==
+                                                              true) {
+                                                            stores.clear();
+                                                            context
+                                                                .read<
+                                                                    ManageStoreBloc>()
+                                                                .add(
+                                                                    GetAllStores());
+                                                            Fluttertoast
+                                                                .showToast(
+                                                                    msg: value
+                                                                        .data2);
+                                                            Navigator.pop(
+                                                                context);
+                                                          } else {
+                                                            Fluttertoast
+                                                                .showToast(
+                                                                    msg: value
+                                                                        .data2);
+                                                          }
+                                                        },
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                              child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: Text(
+                                                    bottomSheetList[index]
+                                                            .name ??
+                                                        "",
+                                                    style: GoogleFonts.urbanist(
+                                                      color: bottomSheetList[
+                                                                      index]
+                                                                  .isAlert ==
+                                                              true
+                                                          ? ColorTheme.red
+                                                          : ColorTheme.text,
+                                                      fontSize: 16.sp,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  )),
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) =>
+                                              Divider(
+                                                height: 8,
+                                                color: ColorTheme.backGround,
+                                              ),
+                                          itemCount: bottomSheetList.length),
+                                    ],
+                                  ),
+                                ),
                               );
                             },
-                            separatorBuilder: (context, index) => Divider(
-                                  height: 8,
-                                  color: ColorTheme.backGround,
-                                ),
-                            itemCount: bottomSheetList.length),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },child: Padding(
-              padding: const EdgeInsets.only(top: 5,left: 5,right: 8 ),
-              child: SvgPicture.string(CommonSvgFiles().moreSvg),
-            )):SizedBox()
+                          );
+                        },
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5, left: 5, right: 8),
+                      child: SvgPicture.string(CommonSvgFiles().moreSvg),
+                    ))
+                : SizedBox()
           ],
         ),
       ),

@@ -10,6 +10,7 @@ import 'package:pos_app/auth/authenticate.dart';
 import 'package:pos_app/common_widgets/app_bar.dart';
 import 'package:pos_app/common_widgets/buttons.dart';
 import 'package:pos_app/common_widgets/drop_down_widget.dart';
+import 'package:pos_app/common_widgets/store_select_drop_down.dart';
 import 'package:pos_app/common_widgets/text_field.dart';
 import 'package:pos_app/no_data.dart';
 import 'package:pos_app/no_search_data.dart';
@@ -24,7 +25,7 @@ import 'package:pos_app/utils/svg_files/common_svg.dart';
 import 'package:pos_app/warehouse/bloc/manage_warehouse/manage_warehouse_bloc.dart';
 import 'package:pos_app/warehouse/models/warehouse_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+List<StoreModel> stores = [];
 class StoreList extends StatefulWidget {
   const StoreList({super.key, this.warehouseId});
   final String? warehouseId;
@@ -36,6 +37,7 @@ class StoreList extends StatefulWidget {
 class _StoreListState extends State<StoreList> {
   @override
   void initState() {
+    stores.clear();
     context
         .read<ManageStoreBloc>()
         .add(GetAllStores(warehouseId: widget.warehouseId, pageNo: 1));
@@ -46,7 +48,7 @@ class _StoreListState extends State<StoreList> {
   List<WareHouseModel> warehouses = [];
   String? selectedValue;
 
-  List<StoreModel> stores = [];
+
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
   bool hasNextPage = false;
@@ -124,7 +126,16 @@ class _StoreListState extends State<StoreList> {
                     isLoading == false
                 ? NoDataPage(
                     name: "Create new Store",
-                    onTap: () {},
+                    onTap: () {
+                      FocusScope.of(context)
+                          .requestFocus(
+                          new FocusNode());
+                      PersistentNavBarNavigator
+                          .pushNewScreen(context,
+                          withNavBar: false,
+                          screen:
+                          const CreateNewStore());
+                    },
                     isButton: authentication.authenticatedUser.userType ==
                             "admin" ||
                         authentication.authenticatedUser.userType == "wmanager")
@@ -199,9 +210,13 @@ class _StoreListState extends State<StoreList> {
                       },
                     ),
                     onLoading: () {
+                      pageNo++;
                       if (hasNextPage == true) {
                         context.read<ManageStoreBloc>().add(GetAllStores(
-                            warehouseId: widget.warehouseId, pageNo: ++pageNo));
+                            warehouseId: widget.warehouseId, pageNo: pageNo));
+                        if (mounted) {
+                          refreshController.loadComplete();
+                        }
                       } else {
                         log(1.1);
                       }
@@ -282,8 +297,8 @@ class _StoreListState extends State<StoreList> {
                                       bottom: 0),
                                   child: Row(
                                     children: [
-                                      Expanded(
-                                        flex: 2,
+                                      SizedBox(
+                                        width: 244.w,
                                         child: CurvedTextField(
                                           controller: _searchController,
                                           onChanged: (p0) {
@@ -297,21 +312,34 @@ class _StoreListState extends State<StoreList> {
                                           title: "Search stores",
                                           isSearch: true,
                                         ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: DropDownWidget(
+                                      ),SizedBox(width: 6,),
+                                      SizedBox(height: 47.h,
+                                          width: 144.w,
+                                          child: StoreDropDownWidget(
                                             value: selectedValue,
                                             items: warehouses,
                                             onChange: (val) {
-                                              stores.clear();
-                                              context
-                                                  .read<ManageStoreBloc>()
-                                                  .add(GetAllStores(
-                                                      warehouseId: val,
-                                                      searchKey: null,
-                                                      pageNo: 1));
+
+                                              if(val=="All Warehouses")
+                                                {
+                                                  isLoading=true;
+                                                  stores.clear();
+                                                  context
+                                                      .read<ManageStoreBloc>()
+                                                      .add(GetAllStores(
+                                                    warehouseId: null,));
+                                                }else {
+                                                isLoading=true;
+                                                stores.clear();
+                                                context
+                                                    .read<ManageStoreBloc>()
+                                                    .add(GetAllStores(
+                                                    warehouseId: val,
+                                                    searchKey: null,
+                                                    pageNo: 1));
+                                              }
                                               selectedValue = val;
+
                                               setState(() {});
                                             },
                                           )),

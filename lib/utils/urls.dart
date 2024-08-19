@@ -12,6 +12,7 @@ class PosUrls{
   static const String warehouseDashboardUrl ="$baseUrl/product/dashbord-for-warehouse-admin/1";
   static const String productList="$baseUrl/product/list-product";
   static const String productListByInventory="$baseUrl/costing/list-product-by-inventory-for-costing/";
+  static const String productListByInventoryForOrder="$baseUrl/order/list-product-by-inventory-for-order/";
   static const String varientList="$baseUrl/product/list-variant";
   static const String varientListInWareHouse="$baseUrl/product/list-variant-by-warehouse/";
    static const String varientDetails="$baseUrl/product/read-edit-delete-variant/";
@@ -20,7 +21,7 @@ class PosUrls{
   static const String createProduct="$baseUrl/product/create-product";
   static const String editVariantImageUrl="$baseUrl/product/edit-variant-image/";
   static const String deleteProduct="$baseUrl/product/read-edit-delete-product/";
-  static const String createVariant="$baseUrl/product/create-variantt-new";
+  static const String createVariant="$baseUrl/product/create-variant-new";
   static const String createOrder="$baseUrl/order/create-order";
   static const String editOrder="$baseUrl/order/patch-order";
   static const String createAttribute="$baseUrl/product/create-attribute";
@@ -50,6 +51,7 @@ class PosUrls{
   static  String listOrderHistory="$baseUrl/order/list-orders/${authentication.authenticatedUser.businessData?.businessId}";
   static const String orderDetails="$baseUrl/order/read-order/";
   static const String listProductForInventory="$baseUrl/product/list-product-by-inventory/";
+  static const String listProductForInventoryForOrder="$baseUrl/order/list-product-by-inventory-for-order/";
   static const String stockApprovalByAdmin="$baseUrl/stock/adjustment-approval-by-admin";
   static const String listProductForWareHouse="$baseUrl/product/list-product-by-warehouse/";
   static const String allocateStockToStoreUrl="$baseUrl/stock/allocate-stock-to-store";

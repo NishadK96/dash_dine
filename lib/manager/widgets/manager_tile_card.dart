@@ -21,30 +21,37 @@ import 'package:pos_app/warehouse/widgets/delete_popup.dart';
 
 class ManagerTileCard extends StatefulWidget {
   final ManagerList? managerDetails;
-  const ManagerTileCard({super.key, required this.managerDetails});
+  final bool? fromDetails;
+  final int? wareHouseId;
+  const ManagerTileCard(
+      {super.key,
+      required this.managerDetails,
+      this.fromDetails = false,
+      this.wareHouseId});
 
   @override
   State<ManagerTileCard> createState() => _ManagerTileCardState();
 }
 
 class _ManagerTileCardState extends State<ManagerTileCard> {
-
-
   @override
   Widget build(BuildContext context) {
-
-    final List<BottomSheetModel> bottomSheetList =authentication.authenticatedUser.userType=="wmanager" && widget.managerDetails?.userType=="wmanager"?[]: [
-      const BottomSheetModel(
-        value: "edit",
-        name: "Edit Manager",
-      ),
-      const BottomSheetModel(
-        value: "changepass",
-        name: "Change Password",
-      ),
-      const BottomSheetModel(
-          value: "delete", name: "Delete Manager", isAlert: true),
-    ];
+    final List<BottomSheetModel> bottomSheetList =
+        authentication.authenticatedUser.userType == "wmanager" &&
+                widget.managerDetails?.userType == "wmanager"
+            ? []
+            : [
+                const BottomSheetModel(
+                  value: "edit",
+                  name: "Edit Manager",
+                ),
+                const BottomSheetModel(
+                  value: "changepass",
+                  name: "Change Password",
+                ),
+                const BottomSheetModel(
+                    value: "delete", name: "Delete Manager", isAlert: true),
+              ];
     return InkWell(
       onTap: () {
         showModalBottomSheet(
@@ -86,6 +93,8 @@ class _ManagerTileCardState extends State<ManagerTileCard> {
                                     PersistentNavBarNavigator.pushNewScreen(
                                         context,
                                         screen: EditManagerPage(
+                                            warehouseId: widget.wareHouseId,
+                                            fromDetails: widget.fromDetails,
                                             managerType: widget
                                                     .managerDetails?.userType ??
                                                 "",
@@ -94,38 +103,59 @@ class _ManagerTileCardState extends State<ManagerTileCard> {
                                   }
                                   if (bottomSheetList[index].value ==
                                       "delete") {
-                                    DeletePopup().deleteAlert(context, "Are you sure you want to delete\nManager",
-                                    () {
-                                      Navigator.pop(context);
-                                      ManagerDataSource()
-                                          .deleteManager(
-                                          userId: widget.managerDetails?.id
-                                              .toString() ??
-                                              "")
-                                          .then((value) {
-                                        if (value.data1 == true) {
-                                          Fluttertoast.showToast(
-                                              msg: value.data2);
-                                          Navigator.pop(context);
-                                          context.read<ManagerBloc>().add(
-                                              GetAllMangers(
-                                                  managerType: widget
-                                                      .managerDetails
-                                                      ?.userType ??
-                                                      ""));
-                                        } else {
-                                          Fluttertoast.showToast(
-                                              msg: value.data2);
-                                        }
-                                      });
-                                    },);
-
+                                    DeletePopup().deleteAlert(
+                                      context,
+                                      "Are you sure you want to delete\nManager",
+                                      () {
+                                        Navigator.pop(context);
+                                        ManagerDataSource()
+                                            .deleteManager(
+                                                userId: widget
+                                                        .managerDetails?.id
+                                                        .toString() ??
+                                                    "")
+                                            .then((value) {
+                                          if (value.data1 == true) {
+                                            Fluttertoast.showToast(
+                                                msg: value.data2);
+                                            Navigator.pop(context);
+                                            if (widget.fromDetails == true) {
+                                              context.read<ManagerBloc>().add(
+                                                  GetAllMangers(
+                                                      wareHouseId: widget
+                                                          .wareHouseId
+                                                          .toString(),
+                                                      managerType: widget
+                                                              .managerDetails
+                                                              ?.userType ??
+                                                          ""));
+                                            } else {
+                                              context.read<ManagerBloc>().add(
+                                                  GetAllMangers(
+                                                      managerType: widget
+                                                              .managerDetails
+                                                              ?.userType ??
+                                                          ""));
+                                            }
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg: value.data2);
+                                          }
+                                        });
+                                      },
+                                    );
                                   }
-                                  if (bottomSheetList[index].value =="changepass")
-                                    {
-                                      Navigator.pop(context);
-                                      PersistentNavBarNavigator.pushNewScreen(context, screen: ChangePassword(userId: widget.managerDetails?.id.toString()??"",));
-                                    }
+                                  if (bottomSheetList[index].value ==
+                                      "changepass") {
+                                    Navigator.pop(context);
+                                    PersistentNavBarNavigator.pushNewScreen(
+                                        context,
+                                        screen: ChangePassword(
+                                          userId: widget.managerDetails?.id
+                                                  .toString() ??
+                                              "",
+                                        ));
+                                  }
                                 },
                                 child: Padding(
                                     padding: const EdgeInsets.all(10.0),
@@ -136,7 +166,7 @@ class _ManagerTileCardState extends State<ManagerTileCard> {
                                                 true
                                             ? ColorTheme.red
                                             : ColorTheme.text,
-                                        fontSize:16.sp,
+                                        fontSize: 16.sp,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     )),
@@ -214,13 +244,13 @@ class _ManagerTileCardState extends State<ManagerTileCard> {
                       'ID: ${widget.managerDetails?.id}',
                       style: TextStyle(
                         color: const Color(0xFF1C1B1F),
-                        fontSize:12.sp,
+                        fontSize: 12.sp,
                         fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(
-                      width: isTab(context)?300: 240.w,
+                      width: isTab(context) ? 300 : 240.w,
                       child: Text(
                         "${widget.managerDetails?.firstName.toString().toTitleCase()} ${widget.managerDetails?.lastName.toString().toTitleCase()}",
                         maxLines: 1,
@@ -242,7 +272,7 @@ class _ManagerTileCardState extends State<ManagerTileCard> {
                           width: 5,
                         ),
                         SizedBox(
-                          width:isTab(context)?300: 240.w,
+                          width: isTab(context) ? 300 : 240.w,
                           child: Text(
                             widget.managerDetails?.email ?? "",
                             maxLines: 1,

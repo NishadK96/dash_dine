@@ -20,6 +20,7 @@ import 'package:pos_app/utils/svg_files/common_svg.dart';
 import 'package:pos_app/variants/data/data_source.dart';
 import 'package:pos_app/variants/model/attribute_model.dart';
 import 'package:pos_app/variants/model/variant_model.dart';
+import 'package:pos_app/variants/screens/variant_list.dart';
 import 'package:pos_app/variants/variant_bloc.dart';
 
 // import 'package:pos_app/variants/variant_bloc.dart';
@@ -566,7 +567,7 @@ class _EditVariantState extends State<EditVariant> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  child: ListView.separated(
+                  child: ListView.separated(physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemCount: attributeList.length,
@@ -659,10 +660,16 @@ class _EditVariantState extends State<EditVariant> {
                                   widget.variantCard?.id ?? 0)
                                   .then((value) {
                                 if (value.data1 == true) {
-                                  context
-                                      .read<VariantBloc>()
-                                      .add(GetAllVariants());
-                                  Navigator.pop(context);
+
+                                  // setState(() {
+
+                                  // });
+
+                                  // Navigator.pop(context);
+                                  // variantList.clear();
+                                  // context
+                                  //     .read<VariantBloc>()
+                                  //     .add(GetAllVariants(pageNo: 1));
                                   Fluttertoast.showToast(msg: value.data2);
                                   setState(() {
                                     isCreating = false;
@@ -695,14 +702,16 @@ class _EditVariantState extends State<EditVariant> {
                               widget.variantCard?.id ?? 0)
                               .then((value) {
                             if (value.data1 == true) {
-                              context
-                                  .read<VariantBloc>()
-                                  .add(GetAllVariants());
-                              Navigator.pop(context);
+                            
+                              // context
+                              //     .read<VariantBloc>()
+                              //     .add(GetAllVariants(pageNo: 1));
                               Fluttertoast.showToast(msg: value.data2);
                               setState(() {
                                 isCreating = false;
                               });
+                              // Navigator.pop(context);
+
                             } else {
                               setState(() {
                                 isCreating = false;

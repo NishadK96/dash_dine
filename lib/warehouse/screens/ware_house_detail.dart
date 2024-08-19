@@ -515,7 +515,7 @@ String storeCount="0";
                           shrinkWrap: true,
                           primary: false,
                           itemBuilder: (context, index) {
-                            return ManagerTileCard(managerDetails: managerList[index],
+                            return ManagerTileCard(managerDetails: managerList[index],fromDetails: true,wareHouseId: widget.warehouses?.id,
                             );
                           },
                           separatorBuilder: (context, index) => const SizedBox(
