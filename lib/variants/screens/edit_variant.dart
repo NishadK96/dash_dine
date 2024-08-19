@@ -661,15 +661,15 @@ class _EditVariantState extends State<EditVariant> {
                                   .then((value) {
                                 if (value.data1 == true) {
 
-                                  setState(() {
+                                  // setState(() {
 
-                                  });
+                                  // });
 
-                                  Navigator.pop(context);
-                                  variantList.clear();
-                                  context
-                                      .read<VariantBloc>()
-                                      .add(GetAllVariants(pageNo: 1));
+                                  // Navigator.pop(context);
+                                  // variantList.clear();
+                                  // context
+                                  //     .read<VariantBloc>()
+                                  //     .add(GetAllVariants(pageNo: 1));
                                   Fluttertoast.showToast(msg: value.data2);
                                   setState(() {
                                     isCreating = false;
@@ -702,14 +702,16 @@ class _EditVariantState extends State<EditVariant> {
                               widget.variantCard?.id ?? 0)
                               .then((value) {
                             if (value.data1 == true) {
-                              context
-                                  .read<VariantBloc>()
-                                  .add(GetAllVariants());
-                              Navigator.pop(context);
+                            
+                              // context
+                              //     .read<VariantBloc>()
+                              //     .add(GetAllVariants(pageNo: 1));
                               Fluttertoast.showToast(msg: value.data2);
                               setState(() {
                                 isCreating = false;
                               });
+                              // Navigator.pop(context);
+
                             } else {
                               setState(() {
                                 isCreating = false;

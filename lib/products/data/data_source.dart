@@ -223,7 +223,7 @@ class ProductDataSource {
       String path = underWareHouse == true
           ? "${PosUrls.listProductForWareHouse}$inventoryId"
           : fromOrder == true
-              ? "${PosUrls.listProductForInventory}$inventoryId"
+              ? "${PosUrls.listProductForInventoryForOrder}$inventoryId"
               : costing == true
                   ? PosUrls.listProductsForCosting
                   : isInventory == true
@@ -274,6 +274,7 @@ class ProductDataSource {
           },
         ),
       );
+      print("responseeee $response");
       if (response.data['status'] == 'success') {
         List<VariantsListModel> productList = [];
         for (var element in response.data['data']['results']) {
@@ -286,6 +287,7 @@ class ProductDataSource {
         return DoubleResponse(false, null);
       }
     } catch (e) {
+      print("excccccdeee $e");
       // If an exception occurs during the request, handle it here
       return DoubleResponse(
         false,

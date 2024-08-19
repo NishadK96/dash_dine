@@ -69,7 +69,7 @@ class VariantsListModel {
 }
 class PriceData {
   int? costingId;
-  int? sellingPrice;
+  dynamic? sellingPrice;
   String? costingType;
 
   PriceData({this.costingId, this.sellingPrice, this.costingType});
