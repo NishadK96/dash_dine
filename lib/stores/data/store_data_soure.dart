@@ -53,7 +53,7 @@ class StoreDataSource {
   }) async {
     try {
       final response = await client.put(
-        "${PosUrls.editStore}$id",
+        "${PosUrls.editStore}$id/",
         data: {
           "name": name,
           // "description": description,
@@ -256,21 +256,24 @@ class StoreDataSource {
   Future<DoubleResponse> deleteStore({
     required String storeId,
   }) async {
+    print("urrll ${PosUrls.editStore}$storeId");
     try {
-      final response = await client.delete(
-        "${PosUrls.editStore}$storeId/",
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ),
-      );
-      return DoubleResponse(response.statusCode == 204, "Deleted Successfully");
+       final response = await client.delete(
+      "${PosUrls.editStore}$storeId/",
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+    print("responseeee reeeedee $response");
+       return DoubleResponse(response.statusCode == 200, "Deleted Successfully");
     } catch (e) {
-      // Handle the error appropriately, possibly returning a failure response
-      return DoubleResponse(false, "Failed to delete store");
+      print("edcc z4e $e");
+      return DoubleResponse(false, "Failed to Delete");
     }
+
   }
 
 

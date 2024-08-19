@@ -257,7 +257,7 @@ class _OrderProductsState extends State<OrderProducts> {
                                   crossAxisCount: 3,
                                   crossAxisSpacing: 5,
                                   mainAxisSpacing: 5,
-                                  childAspectRatio: 0.78),
+                                  childAspectRatio: 0.7),
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
@@ -347,7 +347,7 @@ class _OrderProductsState extends State<OrderProducts> {
                                                           height: 15,
                                                         ),
                                                         CommonButton(
-                                                            title: "Countinue",
+                                                            title: "Continue",
                                                             onTap: () {
                                                               if (quantityController
                                                                           .text ==
@@ -451,6 +451,14 @@ class _OrderProductsState extends State<OrderProducts> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
+                                   productList[index].costingType=="normal price"?   Text(
+                                      "${productList[index].price} SAR",
+                                      style: GoogleFonts.urbanist(
+                                        color: ColorTheme.secondary,
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ):Container(),
                                   ],
                                 ),
                               ),

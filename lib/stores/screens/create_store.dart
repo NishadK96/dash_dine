@@ -10,6 +10,7 @@ import 'package:pos_app/common_widgets/buttons.dart';
 import 'package:pos_app/common_widgets/drop_down_widget.dart';
 import 'package:pos_app/common_widgets/text_field.dart';
 import 'package:pos_app/stores/manage_store_bloc/manage_store_bloc.dart';
+import 'package:pos_app/stores/screens/store_list.dart';
 import 'package:pos_app/utils/colors.dart';
 import 'package:pos_app/utils/size_config.dart';
 import 'package:pos_app/utils/svg_files/common_svg.dart';
@@ -63,6 +64,7 @@ class _CreateNewStoreState extends State<CreateNewStore> {
           listener: (context, state) {
             if (state is CreateStoreLoading) {}
             if (state is CreateStoreSuccess) {
+              stores.clear();
               isButtonLoading = false;
               setState(() {});
               Fluttertoast.showToast(msg: state.message);

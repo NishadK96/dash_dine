@@ -205,7 +205,6 @@ class _StoreTileCardState extends State<StoreTileCard> {
                                                     "Are you sure you want to delete\nStore",
                                                     () {
                                                       Navigator.pop(context);
-                                                      Navigator.pop(context);
                                                       StoreDataSource()
                                                           .deleteStore(
                                                               storeId: widget
@@ -216,11 +215,6 @@ class _StoreTileCardState extends State<StoreTileCard> {
                                                           if (value.data1 ==
                                                               true) {
                                                             stores.clear();
-                                                            setState(()
-                                                            {
-
-                                                            });
-
                                                             context
                                                                 .read<
                                                                     ManageStoreBloc>()
@@ -235,10 +229,21 @@ class _StoreTileCardState extends State<StoreTileCard> {
 
                                                             });
                                                           } else {
+
+                                                            stores.clear();
+                                                            context
+                                                                .read<
+                                                                ManageStoreBloc>()
+                                                                .add(
+                                                                GetAllStores(pageNo: 1));
                                                             Fluttertoast
                                                                 .showToast(
                                                                     msg: value
                                                                         .data2);
+                                                            setState(()
+                                                            {
+
+                                                            });
                                                           }
                                                         },
                                                       );
