@@ -15,7 +15,8 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:pos_app/utils/loading_page.dart';
 import 'package:pos_app/variants/model/orderDetails.dart';
 import 'package:pos_app/variants/model/order_lines.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:printing/printing.dart';
 class InvoiceDetails extends StatefulWidget {
   const InvoiceDetails({super.key,required this.id});
   final int id;
@@ -59,7 +60,10 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
           const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 13),
           child: SizedBox(
               width: DeviceInfo(context).width,
-              child:  CommonButton(onTap: () {
+              child:  CommonButton(onTap: () async{
+                   var data = await http.get(Uri.parse(
+                        "http://api-posorder.dhoomaworksbench.site/media/invoice/order-invoice_iJA3AId.pdf"));
+                    await Printing.layoutPdf(onLayout: (_) => data.bodyBytes);
                 // Navigator.push(context, MaterialPageRoute(builder: (context) => YourCartPage(),));
               },
                 title: "Print Invoice",
